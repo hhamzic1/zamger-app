@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:zamgerapp/configuration/themeconfiguration.dart';
-import 'package:zamgerapp/navigation/otherscreen.dart';
+import 'package:zamgerapp/navigation/other_screen.dart';
 
 class DrawerScreen extends StatefulWidget {
   @override

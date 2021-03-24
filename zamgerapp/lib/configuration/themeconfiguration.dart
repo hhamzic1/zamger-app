@@ -12,5 +12,5 @@ List<Map> drawerItems = [
   {'icon': Icons.outbox, 'title': 'Outbox'},
   {'icon': FontAwesomeIcons.pen, 'title': 'Ispiti'},
   {'icon': Icons.book, 'title': 'Zadaće'},
-  {'icon': FontAwesomeIcons.userAlt, 'title': 'Moj profil'},
+  {'icon': FontAwesomeIcons.userAlt, 'title': 'Moj profil'}
 ];

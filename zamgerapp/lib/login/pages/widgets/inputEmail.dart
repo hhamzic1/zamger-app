@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:zamgerapp/login/pages/widgets/button.dart';
 
 class InputEmail extends StatefulWidget {
   @override
@@ -14,6 +15,7 @@ class _InputEmailState extends State<InputEmail> {
         height: 60,
         width: MediaQuery.of(context).size.width,
         child: TextField(
+          controller: ButtonLoginState.usernameController,
           style: TextStyle(
             color: Colors.white,
           ),

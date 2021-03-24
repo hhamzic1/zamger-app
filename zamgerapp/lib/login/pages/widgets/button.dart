@@ -1,12 +1,18 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:zamgerapp/home/pages/homepage.dart';
+import '../login_screen.dart';
+import 'package:http/http.dart' as http;
 
 class ButtonLogin extends StatefulWidget {
   @override
-  _ButtonLoginState createState() => _ButtonLoginState();
+  ButtonLoginState createState() => ButtonLoginState();
 }
 
-class _ButtonLoginState extends State<ButtonLogin> {
+class ButtonLoginState extends State<ButtonLogin> {
+  static final usernameController = TextEditingController();
+  static final passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -32,11 +38,13 @@ class _ButtonLoginState extends State<ButtonLogin> {
         ),
         child: TextButton(
           onPressed: () {
-            print('Huso kralj');
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => HomePage()),
-            );
+            loginUser(usernameController.text, passwordController.text)
+                .then((response) => {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => HomePage()),
+                      )
+                    });
           },
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -58,5 +66,30 @@ class _ButtonLoginState extends State<ButtonLogin> {
         ),
       ),
     );
+  }
+
+  Future<dynamic> loginUser(String username, String password) async {
+    var headers = {'Content-Type': 'application/x-www-form-urlencoded'};
+    var request = http.Request(
+        'POST',
+        Uri.parse(
+            'https://sso.etf.unsa.ba/auth/realms/etf.unsa.ba/protocol/openid-connect/token'));
+    request.bodyFields = {
+      'username': username,
+      'password': password,
+      'grant_type': 'password',
+      'client_id': 'admin-cli'
+    };
+    request.headers.addAll(headers);
+
+    http.StreamedResponse sResponse = await request.send();
+    var response = await http.Response.fromStream(sResponse);
+
+    if (response.statusCode == 200) {
+      var resp = jsonDecode(response.body);
+      print(resp["access_token"]);
+    } else {
+      print(response.reasonPhrase);
+    }
   }
 }

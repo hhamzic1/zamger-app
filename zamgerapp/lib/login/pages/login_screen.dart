@@ -4,6 +4,8 @@ import 'package:zamgerapp/login/pages/widgets/inputEmail.dart';
 import 'package:zamgerapp/login/pages/widgets/password.dart';
 import 'package:zamgerapp/login/pages/widgets/textLogin.dart';
 import 'package:zamgerapp/login/pages/widgets/verticalText.dart';
+import 'package:zamgerapp/navigation/drawer.dart';
+import 'package:zamgerapp/navigation/home_screen.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -36,6 +38,17 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class HomePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Stack(
+        children: [DrawerScreen(), HomeScreen()],
       ),
     );
   }

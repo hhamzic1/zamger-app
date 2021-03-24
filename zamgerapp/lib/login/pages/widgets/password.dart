@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:zamgerapp/login/pages/widgets/button.dart';
 
 class PasswordInput extends StatefulWidget {
   @override
@@ -14,6 +15,7 @@ class _PasswordInputState extends State<PasswordInput> {
         height: 60,
         width: MediaQuery.of(context).size.width,
         child: TextField(
+          controller: ButtonLoginState.passwordController,
           style: TextStyle(
             color: Colors.white,
           ),
