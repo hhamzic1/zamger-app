@@ -1,1 +1,1 @@
-# zamger-app
+# Zamger - mobile app
