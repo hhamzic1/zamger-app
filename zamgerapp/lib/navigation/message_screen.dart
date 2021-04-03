@@ -1,12 +1,59 @@
+import 'package:fl_animated_linechart/common/pair.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:swipedetector/swipedetector.dart';
+import 'package:zamgerapp/ZamgerAPI/zamger_api_service.dart';
+import 'package:zamgerapp/models/index.dart';
 
-class Screen2 extends StatefulWidget {
+class MessageScreen extends StatefulWidget {
+  String _message;
+  String _time;
+  Person _person;
+  int _me;
+  String _type;
+  MessageScreen(String msg, String time, Person prsn, int me, String type) {
+    _message = msg;
+    _time = time;
+    _person = prsn;
+    _me = me;
+    _type = type;
+  }
   @override
-  _Screen2State createState() => _Screen2State();
+  _MessageState createState() =>
+      _MessageState(_message, _time, _person, _me, _type);
 }
 
-class _Screen2State extends State<Screen2> {
+class _MessageState extends State<MessageScreen> {
+  String _message;
+  String _time;
+  Person _person;
+  int _me;
+  String _type;
+  bool _isSendButtonDisabled = false;
+  bool _isMessageInputEnabled = true;
+  List<Pair<String, Pair<String, Person>>> _conversation = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _conversation.add(new Pair(_message, new Pair(_time, _person)));
+  }
+
+  final replyController = TextEditingController();
+  static final DateFormat formatter = DateFormat('yyyy-MM-dd HH:mm:ss');
+  _MessageState(String msg, String time, Person prsn, int me, String type) {
+    _message = msg;
+    _time = time;
+    _person = prsn;
+    _me = me;
+    _type = type;
+    if (type == 'outbox') {
+      _isSendButtonDisabled = true;
+      _isMessageInputEnabled = false;
+      replyController.text = "Ne možete odgovoriti na ovu poruku . . .";
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,7 +63,7 @@ class _Screen2State extends State<Screen2> {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                   colors: [
-                    Colors.pink,
+                    Colors.amber[900],
                     Colors.red,
                   ],
                   begin: Alignment.center,
@@ -28,14 +75,8 @@ class _Screen2State extends State<Screen2> {
                 Container(
                   width: MediaQuery.of(context).size.width,
                   child: AppBar(
-                    actions: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Icon(Icons.settings),
-                      )
-                    ],
                     backgroundColor: Colors.transparent,
-                    title: Text("Elise Remmi"),
+                    title: Text(_person.login),
                     centerTitle: true,
                     elevation: 0,
                     leading: GestureDetector(
@@ -56,43 +97,8 @@ class _Screen2State extends State<Screen2> {
                       Navigator.pop(context);
                     },
                     child: Padding(
-                      padding: const EdgeInsets.only(left: 15, right: 15),
-                      child: ListView(
-                        children: [
-                          senderDetails("Elise Remmi", 0123456789, "22:35",
-                              "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80"),
-                          message(
-                              "Aliright sir, tommorow I will come with my friend and get some nuggets in your table.",
-                              "not me"),
-                          receiverDetails("Me", 9876543210, "22:45",
-                              "https://img.freepik.com/free-psd/young-hipster-man-with-his-arms-crossed_1368-25112.jpg?size=338&ext=jpg"),
-                          message(
-                              "Thsi will be really a great paltforma nf a dmeeting wher  jknr jnionfg jkohnfio nioejfiopmlk fiojodc m jkoniofmniofnmknbkgbnuiognjekgnnvo noi oi fjoi nfonrothoijhf hfroinoirfgjeiofvnrotnmk g jior jrio",
-                              "sent"),
-                          senderDetails("Elise Remmi", 0123456789, "22:35",
-                              "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80"),
-                          message(
-                              "Aliright sir, tommorow I will come with my friend and get some nuggets in your table.",
-                              "not me"),
-                          receiverDetails("Me", 9876543210, "22:45",
-                              "https://img.freepik.com/free-psd/young-hipster-man-with-his-arms-crossed_1368-25112.jpg?size=338&ext=jpg"),
-                          message(
-                              "Thsi will be really a great paltforma nf a dmeeting wher  jknr jnionfg jkohnfio nioejfiopmlk fiojodc m jkoniofmniofnmknbkgbnuiognjekgnnvo noi oi fjoi nfonrothoijhf hfroinoirfgjeiofvnrotnmk g jior jrio",
-                              "sent"),
-                          senderDetails("Elise Remmi", 0123456789, "22:35",
-                              "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80"),
-                          message(
-                              "Aliright sir, tommorow I will come with my friend and get some nuggets in your table.",
-                              "not me"),
-                          receiverDetails("Me", 9876543210, "22:45",
-                              "https://img.freepik.com/free-psd/young-hipster-man-with-his-arms-crossed_1368-25112.jpg?size=338&ext=jpg"),
-                          message(
-                              "Thsi will be really a great paltforma nf a dmeeting wher  jknr jnionfg jkohnfio nioejfiopmlk fiojodc m jkoniofmniofnmknbkgbnuiognjekgnnvo noi oi fjoi nfonrothoijhf hfroinoirfgjeiofvnrotnmk g jior jrio",
-                              "sent"),
-                          SizedBox(height: 80)
-                        ],
-                      ),
-                    ),
+                        padding: const EdgeInsets.only(left: 15, right: 15),
+                        child: _buildConversation()),
                   ),
                 )
               ],
@@ -117,13 +123,18 @@ class _Screen2State extends State<Screen2> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 18.0),
-                      child: Text("Write messages . . .",
-                          style: TextStyle(
-                            letterSpacing: -0.3,
-                            fontWeight: FontWeight.w500,
-                          )),
+                    Flexible(
+                      child: TextField(
+                        enabled: _isMessageInputEnabled,
+                        controller: replyController,
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
+                        decoration: InputDecoration(
+                            hintText: 'Odgovori . . .',
+                            contentPadding: EdgeInsets.all(15.0),
+                            border: InputBorder.none),
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(5.0),
@@ -131,10 +142,18 @@ class _Screen2State extends State<Screen2> {
                           height: 40,
                           width: 40,
                           decoration: BoxDecoration(
-                            color: Colors.pink,
+                            color: Colors.amber[900],
                             shape: BoxShape.circle,
                           ),
-                          child: Icon(Icons.send, color: Colors.white)),
+                          child: TextButton(
+                            child: Icon(Icons.send, color: Colors.white),
+                            onPressed: _isSendButtonDisabled
+                                ? null
+                                : () async {
+                                    await _sendMessage();
+                                    setState(() {});
+                                  },
+                          )),
                     ),
                   ],
                 ),
@@ -146,7 +165,88 @@ class _Screen2State extends State<Screen2> {
     );
   }
 
-  Widget senderDetails(name, contactNumber, time, imageUrl) {
+  Widget _buildConversation() {
+    return _conversation.length != 0
+        ? RefreshIndicator(
+            child: ListView.builder(
+                padding: EdgeInsets.all(8),
+                itemCount: _conversation.length,
+                itemBuilder: (BuildContext context, int index) {
+                  if (_type != 'outbox') {
+                    if (index < 1) {
+                      return Column(
+                        children: [
+                          senderDetails(
+                              _conversation[index].right.right.name +
+                                  " " +
+                                  _conversation[index].right.right.surname,
+                              'https://library.kissclipart.com/20180906/wkw/kissclipart-user-icon-png-clipart-user-profile-computer-icons-94f08bfdb73bc68b.jpg'),
+                          message(_conversation[index].left, 'recieved',
+                              _conversation[index].right.left)
+                        ],
+                      );
+                    } else if (index == 1) {
+                      return Column(
+                        children: [
+                          receiverDetails('Ja',
+                              'https://library.kissclipart.com/20180906/wkw/kissclipart-user-icon-png-clipart-user-profile-computer-icons-94f08bfdb73bc68b.jpg'),
+                          message(_conversation[index].left, 'sent',
+                              _conversation[index].right.left)
+                        ],
+                      );
+                    } else {
+                      return message(_conversation[index].left, 'sent',
+                          _conversation[index].right.left);
+                    }
+                  } else {
+                    return Column(
+                      children: [
+                        receiverDetails('Ja',
+                            'https://library.kissclipart.com/20180906/wkw/kissclipart-user-icon-png-clipart-user-profile-computer-icons-94f08bfdb73bc68b.jpg'),
+                        message(_conversation[index].left, 'sent',
+                            _conversation[index].right.left)
+                      ],
+                    );
+                  }
+                }),
+            onRefresh: () async {
+              setState(() {});
+            },
+          )
+        : Center(child: CircularProgressIndicator());
+  }
+
+  Future<void> _sendMessage() async {
+    Person sender = new Person();
+    sender.id = _me;
+    Message msg = new Message();
+    msg.id = 0;
+    msg.type = 2;
+    msg.scope = 7;
+    msg.receiver = _person.id;
+    msg.sender = sender;
+    msg.time = "";
+    msg.ref = 0;
+    msg.subject = "zamger-app message";
+    msg.text = replyController.text;
+    msg.unread = false;
+
+    var response = await Provider.of<ZamgerAPIService>(context, listen: false)
+        .sendMessage(msg);
+    if (response.isSuccessful) {
+      Message responseMessage = Message.fromJson(response.body);
+      _conversation.add(new Pair(responseMessage.text,
+          new Pair(formatter.format(DateTime.now()), null)));
+      replyController.text = '';
+    } else {
+      _conversation.add(new Pair(
+          replyController.text + " - failed to send message",
+          new Pair(formatter.format(DateTime.now()), null)));
+      replyController.text = '';
+    }
+  }
+
+  Widget senderDetails(name, imageUrl) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 5.0),
       child: Container(
@@ -178,27 +278,7 @@ class _Screen2State extends State<Screen2> {
                     ),
                   ),
                   SizedBox(height: 4),
-                  Text(
-                    contactNumber.toString(),
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w200,
-                      color: Colors.white.withOpacity(0.6),
-                    ),
-                  ),
                 ],
-              ),
-            ),
-            Expanded(
-              child: Align(
-                alignment: Alignment.bottomRight,
-                child: Text(
-                  time,
-                  style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w300),
-                ),
               ),
             ),
           ],
@@ -207,23 +287,13 @@ class _Screen2State extends State<Screen2> {
     );
   }
 
-  Widget receiverDetails(name, contactNumber, time, imageUrl) {
+  Widget receiverDetails(name, imageUrl) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 5.0),
       child: Container(
         height: 65,
         child: Row(
           children: [
-            Align(
-              alignment: Alignment.bottomRight,
-              child: Text(
-                time,
-                style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w300),
-              ),
-            ),
             Expanded(
               child: Align(
                 alignment: Alignment.centerRight,
@@ -241,14 +311,6 @@ class _Screen2State extends State<Screen2> {
                         ),
                       ),
                       SizedBox(height: 4),
-                      Text(
-                        contactNumber.toString(),
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w200,
-                          color: Colors.white.withOpacity(0.6),
-                        ),
-                      ),
                     ],
                   ),
                 ),
@@ -274,40 +336,71 @@ class _Screen2State extends State<Screen2> {
     );
   }
 
-// condition here will be either sent or recieved
-  Widget message(message, condition) {
-    return Padding(
-      padding: EdgeInsets.only(
-        left: 10,
-        right: 10,
-        top: 4,
-        bottom: 4,
-      ),
-      child: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Colors.pink,
-              Colors.pink[400],
-            ],
-          ),
-          borderRadius: BorderRadius.circular(
-            18,
-          ),
+  Widget message(message, condition, time) {
+    return Align(
+      alignment:
+          condition == 'sent' ? Alignment.bottomRight : Alignment.bottomLeft,
+      child: Padding(
+        padding: EdgeInsets.only(
+          left: 10,
+          right: 10,
+          top: 4,
+          bottom: 4,
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Center(
-            child: Text(
-              message,
-              textAlign: condition == "sent" ? TextAlign.right : TextAlign.left,
-              style: TextStyle(
-                fontSize: 12,
-                color: Colors.white,
-                fontWeight: FontWeight.w200,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: condition == "sent"
+              ? MainAxisAlignment.end
+              : MainAxisAlignment.start,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Colors.white,
+                    Colors.white54,
+                  ],
+                ),
+                borderRadius: BorderRadius.circular(
+                  18,
+                ),
               ),
+              child: Column(
+                  crossAxisAlignment: condition == 'sent'
+                      ? CrossAxisAlignment.end
+                      : CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          time,
+                          style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w300),
+                        ),
+                      ),
+                    ),
+                    Container(
+                        width: 200,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(15, 0, 15, 5),
+                          child: Text(
+                            message,
+                            maxLines: null,
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        )),
+                  ]),
             ),
-          ),
+          ],
         ),
       ),
     );

@@ -63,30 +63,38 @@ class _$ZamgerAPIService extends ZamgerAPIService {
 
   @override
   Future<Response<dynamic>> getCountOfMessagesInInbox() {
-    final $url = 'inbox/count';
+    final $url = '/inbox/count';
     final $request = Request('GET', $url, client.baseUrl);
     return client.send<dynamic, dynamic>($request);
   }
 
   @override
   Future<Response<dynamic>> getUnreadMessages() {
-    final $url = 'inbox/unread&resolve[]=Person';
+    final $url = '/inbox/unread&resolve[]=Person';
     final $request = Request('GET', $url, client.baseUrl);
     return client.send<dynamic, dynamic>($request);
   }
 
   @override
   Future<Response<dynamic>> getMessageById(int messageId) {
-    final $url = 'inbox/$messageId';
+    final $url = '/inbox/$messageId';
     final $request = Request('GET', $url, client.baseUrl);
     return client.send<dynamic, dynamic>($request);
   }
 
   @override
   Future<Response<dynamic>> getInboxAnnouncements(int limit) {
-    final $url = 'inbox/announcements';
+    final $url = '/inbox/announcements';
     final $params = <String, dynamic>{'messages': limit};
     final $request = Request('GET', $url, client.baseUrl, parameters: $params);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> sendMessage(Message message) {
+    final $url = '/inbox';
+    final $request =
+        Request('POST', $url, client.baseUrl, body: message.toJson());
     return client.send<dynamic, dynamic>($request);
   }
 
@@ -101,7 +109,7 @@ class _$ZamgerAPIService extends ZamgerAPIService {
   @override
   Future<Response<dynamic>> getCourseDetailsForStudent(
       int course, int student) {
-    final $url = 'course/$course/student/$student';
+    final $url = '/course/$course/student/$student';
     final $request = Request('GET', $url, client.baseUrl);
     return client.send<dynamic, dynamic>($request);
   }
@@ -109,7 +117,7 @@ class _$ZamgerAPIService extends ZamgerAPIService {
   @override
   Future<Response<dynamic>> getLatestGradesForStudent(int student, int limit) {
     final $url =
-        'course/latestGrades/$student&resolve[]=CourseOffering&resolve[]=CourseUnit';
+        '/course/latestGrades/$student&resolve[]=CourseOffering&resolve[]=CourseUnit';
     final $params = <String, dynamic>{'limit': limit};
     final $request = Request('GET', $url, client.baseUrl, parameters: $params);
     return client.send<dynamic, dynamic>($request);
@@ -119,7 +127,7 @@ class _$ZamgerAPIService extends ZamgerAPIService {
   Future<Response<dynamic>> getAttendanceOnCourse(
       int course, int student, int year) {
     final $url =
-        'class/course/$course/student/$student&resolve[]=ZClass&resolve[]=Person';
+        '/class/course/$course/student/$student&resolve[]=ZClass&resolve[]=Person';
     final $params = <String, dynamic>{'year': year};
     final $request = Request('GET', $url, client.baseUrl, parameters: $params);
     return client.send<dynamic, dynamic>($request);
@@ -127,7 +135,7 @@ class _$ZamgerAPIService extends ZamgerAPIService {
 
   @override
   Future<Response<dynamic>> getLatestExamResults(int student, int limit) {
-    final $url = 'exam/latest/$student';
+    final $url = '/exam/latest/$student';
     final $params = <String, dynamic>{'limit': limit};
     final $request = Request('GET', $url, client.baseUrl, parameters: $params);
     return client.send<dynamic, dynamic>($request);
@@ -135,7 +143,7 @@ class _$ZamgerAPIService extends ZamgerAPIService {
 
   @override
   Future<Response<dynamic>> getUpcomingHomeworkDeadlines(int student) {
-    final $url = 'homework/latest/$student';
+    final $url = '/homework/latest/$student';
     final $request = Request('GET', $url, client.baseUrl);
     return client.send<dynamic, dynamic>($request);
   }
@@ -143,7 +151,7 @@ class _$ZamgerAPIService extends ZamgerAPIService {
   @override
   Future<Response<dynamic>> getFileByHomeworkId(
       int homeworkId, int asgn, int student) {
-    final $url = 'homework/$homeworkId/$asgn/student/$student/file';
+    final $url = '/homework/$homeworkId/$asgn/student/$student/file';
     final $request = Request('GET', $url, client.baseUrl);
     return client.send<dynamic, dynamic>($request);
   }
@@ -151,7 +159,7 @@ class _$ZamgerAPIService extends ZamgerAPIService {
   @override
   Future<Response<dynamic>> getStatusOfSubmittedHomeworkById(
       int homeworkId, int asgn, int student) {
-    final $url = 'homework/$homeworkId/$asgn/student/$student';
+    final $url = '/homework/$homeworkId/$asgn/student/$student';
     final $request = Request('GET', $url, client.baseUrl);
     return client.send<dynamic, dynamic>($request);
   }
@@ -159,35 +167,35 @@ class _$ZamgerAPIService extends ZamgerAPIService {
   @override
   Future<Response<dynamic>> getStatusesOfHomeworksOnCourse(
       int course, int student) {
-    final $url = 'homework/course/$course/student/$student';
+    final $url = '/homework/course/$course/student/$student';
     final $request = Request('GET', $url, client.baseUrl);
     return client.send<dynamic, dynamic>($request);
   }
 
   @override
   Future<Response<dynamic>> getUpcomingEvents(int student) {
-    final $url = 'event/upcoming/$student';
+    final $url = '/event/upcoming/$student';
     final $request = Request('GET', $url, client.baseUrl);
     return client.send<dynamic, dynamic>($request);
   }
 
   @override
   Future<Response<dynamic>> getRegisteredEvents(int student) {
-    final $url = 'event/registered/$student';
+    final $url = '/event/registered/$student';
     final $request = Request('GET', $url, client.baseUrl);
     return client.send<dynamic, dynamic>($request);
   }
 
   @override
   Future<Response<dynamic>> getInfoAboutMyProgrammeAndSemester(int student) {
-    final $url = 'enrollment/current/$student';
+    final $url = '/enrollment/current/$student';
     final $request = Request('GET', $url, client.baseUrl);
     return client.send<dynamic, dynamic>($request);
   }
 
   @override
   Future<Response<dynamic>> getInfoAboutAllSemestersOfStudent(int student) {
-    final $url = 'enrollment/all/$student';
+    final $url = '/enrollment/all/$student';
     final $request = Request('GET', $url, client.baseUrl);
     return client.send<dynamic, dynamic>($request);
   }

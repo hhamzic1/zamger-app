@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:chopper/chopper.dart';
 import 'package:zamgerapp/ZamgerAPI/secure_storage.dart';
+import 'package:zamgerapp/models/index.dart';
 part 'zamger_api_service.chopper.dart';
 
 @ChopperApi()
@@ -27,19 +28,20 @@ abstract class ZamgerAPIService extends ChopperService {
   @Get(path: '/inbox/outbox&resolve[]=Person')
   Future<Response> getRecentSentMessages(@Query('messages') int limit);
 
-  @Get(path: 'inbox/count')
+  @Get(path: '/inbox/count')
   Future<Response> getCountOfMessagesInInbox();
 
-  @Get(path: 'inbox/unread&resolve[]=Person')
+  @Get(path: '/inbox/unread&resolve[]=Person')
   Future<Response> getUnreadMessages();
 
-  @Get(path: 'inbox/{id}')
+  @Get(path: '/inbox/{id}')
   Future<Response> getMessageById(@Path('id') int messageId);
 
-  @Get(path: 'inbox/announcements')
+  @Get(path: '/inbox/announcements')
   Future<Response> getInboxAnnouncements(@Query('messages') int limit);
 
-  //POST metoda za slanje poruke!
+  @Post(path: '/inbox')
+  Future<Response> sendMessage(@Body() Message message);
 
   //COURSE
 
@@ -48,56 +50,56 @@ abstract class ZamgerAPIService extends ChopperService {
           '/course/student/{id}&resolve[]=CourseOffering&resolve[]=CourseUnit')
   Future<Response> getMyCurrentCourses(@Path('id') int id);
 
-  @Get(path: 'course/{course}/student/{student}')
+  @Get(path: '/course/{course}/student/{student}')
   Future<Response> getCourseDetailsForStudent(
       @Path('course') int course, @Path('student') int student);
 
   @Get(
       path:
-          'course/latestGrades/{student}&resolve[]=CourseOffering&resolve[]=CourseUnit')
+          '/course/latestGrades/{student}&resolve[]=CourseOffering&resolve[]=CourseUnit')
   Future<Response> getLatestGradesForStudent(
       @Path('student') int student, @Query('limit') int limit);
 
   @Get(
       path:
-          'class/course/{course}/student/{student}&resolve[]=ZClass&resolve[]=Person')
+          '/class/course/{course}/student/{student}&resolve[]=ZClass&resolve[]=Person')
   Future<Response> getAttendanceOnCourse(@Path('course') int course,
       @Path('student') int student, @Query('year') int year);
 
   //EXAM
-  @Get(path: 'exam/latest/{student}')
+  @Get(path: '/exam/latest/{student}')
   Future<Response> getLatestExamResults(
       @Path('student') int student, @Query('limit') int limit);
 
   // metodu prijave na ispit testirati - kao i odjave sa istog
 
   //HOMEWORK
-  @Get(path: 'homework/latest/{student}')
+  @Get(path: '/homework/latest/{student}')
   Future<Response> getUpcomingHomeworkDeadlines(@Path('student') int student);
 
   @Get(
       path:
-          'homework/{id}/{asgn}/student/{student}/file') //provjeriti sta ovo asgn znači -- skidanje poslanog fajla po id-u zadaće
+          '/homework/{id}/{asgn}/student/{student}/file') //provjeriti sta ovo asgn znači -- skidanje poslanog fajla po id-u zadaće
   Future<Response> getFileByHomeworkId(@Path('id') int homeworkId,
       @Path('asgn') int asgn, @Path('student') int student);
 
-  @Get(path: 'homework/{id}/{asgn}/student/{student}') //status poslanih zadaća
+  @Get(path: '/homework/{id}/{asgn}/student/{student}') //status poslanih zadaća
   Future<Response> getStatusOfSubmittedHomeworkById(@Path('id') int homeworkId,
       @Path('asgn') int asgn, @Path('student') int student);
 
   @Get(
       path:
-          'homework/course/{course}/student/{student}') //status svih zadaća na kursu
+          '/homework/course/{course}/student/{student}') //status svih zadaća na kursu
   Future<Response> getStatusesOfHomeworksOnCourse(
       @Path('course') int course, @Path('student') int student);
 
   //POST metodu zadaće istestirati
 
   //EVENT
-  @Get(path: 'event/upcoming/{student}')
+  @Get(path: '/event/upcoming/{student}')
   Future<Response> getUpcomingEvents(@Path('student') int student);
 
-  @Get(path: 'event/registered/{student}')
+  @Get(path: '/event/registered/{student}')
   Future<Response> getRegisteredEvents(@Path('student') int student);
 
   /*
@@ -112,11 +114,11 @@ abstract class ZamgerAPIService extends ChopperService {
   */
 
   //ENROLLMENT
-  @Get(path: 'enrollment/current/{student}')
+  @Get(path: '/enrollment/current/{student}')
   Future<Response> getInfoAboutMyProgrammeAndSemester(
       @Path('student') int student);
 
-  @Get(path: 'enrollment/all/{student}')
+  @Get(path: '/enrollment/all/{student}')
   Future<Response> getInfoAboutAllSemestersOfStudent(
       @Path('student') int student);
 

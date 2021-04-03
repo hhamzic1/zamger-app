@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:zamgerapp/ZamgerAPI/zamger_api_service.dart';
 import 'package:zamgerapp/models/index.dart';
-
 import 'message_screen.dart';
 
 class Inbox extends StatefulWidget {
@@ -134,13 +133,13 @@ class _Screen1State extends State<Inbox> with SingleTickerProviderStateMixin {
     );
   }
 
-  Widget chatItems(userName, message, time) {
+  Widget chatItems(userName, message, time, person, me, type) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) => Screen2(),
+            builder: (_) => MessageScreen(message, time, person, me, type),
           ),
         );
       },
@@ -164,13 +163,11 @@ class _Screen1State extends State<Inbox> with SingleTickerProviderStateMixin {
             children: [
               Padding(
                 padding: const EdgeInsets.all(10.0),
-                child: Container(
-                  height: 50,
-                  width: 50,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.blue,
-                  ),
+                child: CircleAvatar(
+                  backgroundImage: NetworkImage(
+                      'https://library.kissclipart.com/20180906/wkw/kissclipart-user-icon-png-clipart-user-profile-computer-icons-94f08bfdb73bc68b.jpg'),
+                  backgroundColor: Colors.transparent,
+                  radius: 25,
                 ),
               ),
               Column(
@@ -243,7 +240,10 @@ class _Screen1State extends State<Inbox> with SingleTickerProviderStateMixin {
                       chatItems(
                           _inbox.results[index].sender.login,
                           _inbox.results[index].text,
-                          _inbox.results[index].time),
+                          _inbox.results[index].time,
+                          _inbox.results[index].sender,
+                          _inbox.results[index].receiver,
+                          "inbox")
                     ],
                   );
                 }),
@@ -269,7 +269,10 @@ class _Screen1State extends State<Inbox> with SingleTickerProviderStateMixin {
                       chatItems(
                           _outbox.results[index].receiverPerson.login,
                           _outbox.results[index].text,
-                          _outbox.results[index].time),
+                          _outbox.results[index].time,
+                          _outbox.results[index].receiverPerson,
+                          _outbox.results[index].sender.id,
+                          "outbox"),
                     ],
                   );
                 }),
@@ -295,7 +298,10 @@ class _Screen1State extends State<Inbox> with SingleTickerProviderStateMixin {
                       chatItems(
                           _unread.results[index].sender.login,
                           _unread.results[index].text,
-                          _unread.results[index].time),
+                          _unread.results[index].time,
+                          _unread.results[index].sender,
+                          _unread.results[index].receiver,
+                          "unread"),
                     ],
                   );
                 }),

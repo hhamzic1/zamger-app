@@ -6,7 +6,7 @@ part 'message.g.dart';
 
 @JsonSerializable()
 class Message {
-      Message();
+  Message();
 
   int id;
   int type;
@@ -20,6 +20,7 @@ class Message {
   bool unread;
   Person receiverPerson;
 
-  factory Message.fromJson(Map<String,dynamic> json) => _$MessageFromJson(json);
+  factory Message.fromJson(Map<String, dynamic> json) =>
+      _$MessageFromJson(json);
   Map<String, dynamic> toJson() => _$MessageToJson(this);
 }

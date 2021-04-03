@@ -36,6 +36,8 @@ dependencies:
   http:
   json_to_model: ^1.4.0
   swipedetector:
+  intl:
+  fl_animated_linechart: ^1.1.4
 dependency_overrides:
   analyzer: ^0.41.1
 
