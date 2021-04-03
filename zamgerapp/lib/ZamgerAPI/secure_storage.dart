@@ -6,7 +6,7 @@ class Credentials {
     final storage = FlutterSecureStorage();
     await storage.deleteAll();
     await storage.write(key: 'accessToken', value: accessToken);
-    await storage.write(key: 'refreshToken', value: accessToken);
+    await storage.write(key: 'refreshToken', value: refreshToken);
   }
 
   static Future<String> getAccessToken() async {

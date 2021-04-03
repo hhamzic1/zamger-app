@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:zamgerapp/ZamgerAPI/zamger_api_service.dart';
 import 'package:zamgerapp/configuration/themeconfiguration.dart';
+import 'package:zamgerapp/models/index.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -80,14 +83,17 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             SizedBox(
-              height: 700,
-              child: Center(
-                child: Text(
-                  'Početna',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
-                ),
-              ),
-            )
+              height: 1000,
+              child: TextButton(
+                  onPressed: () async {
+                    var response = await Provider.of<ZamgerAPIService>(context,
+                            listen: false)
+                        .getRecentRecievedMessages(10);
+                    Messages inbox = Messages.fromJson(response.body);
+                    print(inbox.results);
+                  },
+                  child: Text("See tokens")),
+            ),
           ],
         ),
       ),

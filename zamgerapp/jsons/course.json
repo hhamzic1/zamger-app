@@ -1,0 +1,11 @@
+{
+    "CourseOffering": "$courseOffering",
+    "student": "$person",
+    "score": null,
+    "activities": null,
+    "totalScore": null,
+    "possibleScore": null,
+    "percent": null,
+    "grade": null,
+    "gradeDate": null
+}

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
+import 'package:zamgerapp/ZamgerAPI/zamger_api_service.dart';
 import 'package:zamgerapp/configuration/themeconfiguration.dart';
+import 'package:zamgerapp/navigation/inbox_screen.dart';
 import 'package:zamgerapp/navigation/other_screen.dart';
 
 class DrawerScreen extends StatefulWidget {
@@ -9,6 +11,16 @@ class DrawerScreen extends StatefulWidget {
 }
 
 class _DrawerScreenState extends State<DrawerScreen> {
+  String nameSurname = "Zamger";
+
+  @override
+  Future<void> initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _fetchUserNameSurname();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -32,7 +44,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Huso Hamzić',
+                    nameSurname,
                     style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -63,10 +75,20 @@ class _DrawerScreenState extends State<DrawerScreen> {
                                     fontWeight: FontWeight.bold,
                                     fontSize: 20)),
                             onPressed: () => {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Screen2()))
+                              if (element['title'] == 'Inbox')
+                                {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Inbox()))
+                                }
+                              else
+                                {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => OtherScreen()))
+                                }
                             },
                           ),
                         ],
@@ -109,5 +131,15 @@ class _DrawerScreenState extends State<DrawerScreen> {
         ],
       ),
     );
+  }
+
+  _fetchUserNameSurname() async {
+    var response = await Provider.of<ZamgerAPIService>(context, listen: false)
+        .currentPerson();
+    var tempNameSurname =
+        (response.body["name"] + " " + response.body["surname"]);
+    setState(() {
+      nameSurname = tempNameSurname;
+    });
   }
 }

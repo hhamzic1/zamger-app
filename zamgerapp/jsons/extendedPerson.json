@@ -1,0 +1,15 @@
+{
+    "id": 6500,
+    "fathersName": "Ismet",
+    "fathersSurname": "Hamzić",
+    "mothersName": "Adelaida",
+    "mothersSurname": "Hamzić",
+    "sex": "M",
+    "dateOfBirth": "1999-08-16",
+    "placeOfBirth": "$placeOfBirth",
+    "ethnicity": 1,
+    "nationality": 1,
+    "jmbg": 1608999150006,
+    "addressStreetNo": "Pješivac Kula bb",
+    "addressPlace": "$addressPlace"
+}

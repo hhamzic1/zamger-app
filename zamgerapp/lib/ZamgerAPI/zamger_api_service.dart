@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'package:chopper/chopper.dart';
+import 'package:zamgerapp/ZamgerAPI/secure_storage.dart';
 part 'zamger_api_service.chopper.dart';
 
 @ChopperApi()
@@ -6,7 +8,7 @@ abstract class ZamgerAPIService extends ChopperService {
   //ovdje se sada pišu metode za čitav zamger api
 
   //PERSON
-  @Get(path: '/person')
+  @Get(path: '/person&resolve[]=ExtendedPerson')
   Future<Response> currentPerson();
 
   @Get(path: '/person/{id}')
@@ -19,16 +21,16 @@ abstract class ZamgerAPIService extends ChopperService {
   Future<Response> getExtendedPersonById(@Path('id') int id);
 
   //INBOX/OUTBOX
-  @Get(path: '/inbox')
+  @Get(path: '/inbox&resolve[]=Person')
   Future<Response> getRecentRecievedMessages(@Query('messages') int limit);
 
-  @Get(path: '/inbox/outbox')
+  @Get(path: '/inbox/outbox&resolve[]=Person')
   Future<Response> getRecentSentMessages(@Query('messages') int limit);
 
   @Get(path: 'inbox/count')
   Future<Response> getCountOfMessagesInInbox();
 
-  @Get(path: 'inbox/unread')
+  @Get(path: 'inbox/unread&resolve[]=Person')
   Future<Response> getUnreadMessages();
 
   @Get(path: 'inbox/{id}')
@@ -126,7 +128,21 @@ abstract class ZamgerAPIService extends ChopperService {
         services: [
           _$ZamgerAPIService(),
         ],
-        converter: JsonConverter());
+        converter: JsonConverter(),
+        interceptors: [HeaderInterceptor()]);
     return _$ZamgerAPIService(client);
+  }
+}
+
+class HeaderInterceptor implements RequestInterceptor {
+  static const String AUTH_HEADER = "Authorization";
+  static const String BEARER = "Bearer ";
+  @override
+  FutureOr<Request> onRequest(Request request) async {
+    // 5
+    String accessToken = await Credentials.getAccessToken();
+    Request newRequest =
+        request.copyWith(headers: {AUTH_HEADER: BEARER + accessToken});
+    return newRequest;
   }
 }

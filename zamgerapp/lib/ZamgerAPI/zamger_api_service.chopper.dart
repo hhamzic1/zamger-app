@@ -18,7 +18,7 @@ class _$ZamgerAPIService extends ZamgerAPIService {
 
   @override
   Future<Response<dynamic>> currentPerson() {
-    final $url = '/person';
+    final $url = '/person&resolve[]=ExtendedPerson';
     final $request = Request('GET', $url, client.baseUrl);
     return client.send<dynamic, dynamic>($request);
   }
@@ -35,7 +35,7 @@ class _$ZamgerAPIService extends ZamgerAPIService {
     final $url = '/person/search';
     final $params = <String, dynamic>{'query': name};
     final $request = Request('GET', $url, client.baseUrl, parameters: $params);
-    return client.send<dynamic, dynamic>($request);
+    client.send<dynamic, dynamic>($request);
   }
 
   @override
@@ -47,7 +47,7 @@ class _$ZamgerAPIService extends ZamgerAPIService {
 
   @override
   Future<Response<dynamic>> getRecentRecievedMessages(int limit) {
-    final $url = '/inbox';
+    final $url = '/inbox&resolve[]=Person';
     final $params = <String, dynamic>{'messages': limit};
     final $request = Request('GET', $url, client.baseUrl, parameters: $params);
     return client.send<dynamic, dynamic>($request);
@@ -55,7 +55,7 @@ class _$ZamgerAPIService extends ZamgerAPIService {
 
   @override
   Future<Response<dynamic>> getRecentSentMessages(int limit) {
-    final $url = '/inbox/outbox';
+    final $url = '/inbox/outbox&resolve[]=Person';
     final $params = <String, dynamic>{'messages': limit};
     final $request = Request('GET', $url, client.baseUrl, parameters: $params);
     return client.send<dynamic, dynamic>($request);
@@ -70,7 +70,7 @@ class _$ZamgerAPIService extends ZamgerAPIService {
 
   @override
   Future<Response<dynamic>> getUnreadMessages() {
-    final $url = 'inbox/unread';
+    final $url = 'inbox/unread&resolve[]=Person';
     final $request = Request('GET', $url, client.baseUrl);
     return client.send<dynamic, dynamic>($request);
   }

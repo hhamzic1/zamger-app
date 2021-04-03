@@ -1,6 +1,6 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:zamgerapp/ZamgerAPI/secure_storage.dart';
 import '../login_screen.dart';
 import 'package:http/http.dart' as http;
 
@@ -25,11 +25,11 @@ class ButtonLoginState extends State<ButtonLogin> {
           boxShadow: [
             BoxShadow(
               color: Colors.yellow[700],
-              blurRadius: 10.0, // has the effect of softening the shadow
-              spreadRadius: 1.0, // has the effect of extending the shadow
+              blurRadius: 10.0,
+              spreadRadius: 1.0,
               offset: Offset(
-                5.0, // horizontal, move right 10
-                5.0, // vertical, move down 10
+                5.0,
+                5.0,
               ),
             ),
           ],
@@ -37,14 +37,22 @@ class ButtonLoginState extends State<ButtonLogin> {
           borderRadius: BorderRadius.circular(30),
         ),
         child: TextButton(
-          onPressed: () {
-            loginUser(usernameController.text, passwordController.text)
-                .then((response) => {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => HomePage()),
-                      )
-                    });
+          onPressed: () async {
+            var response = await loginUser(
+                usernameController.text, passwordController.text);
+            if (response.statusCode == 200) {
+              var responseBody = jsonDecode(response.body);
+              await Credentials.saveTokens(
+                  responseBody['access_token'], responseBody['refresh_token']);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => HomePage()),
+              );
+            } else {
+              usernameController.text = '';
+              passwordController.text = '';
+              showAlertDialog(context);
+            }
           },
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -83,13 +91,30 @@ class ButtonLoginState extends State<ButtonLogin> {
     request.headers.addAll(headers);
 
     http.StreamedResponse sResponse = await request.send();
-    var response = await http.Response.fromStream(sResponse);
-
-    if (response.statusCode == 200) {
-      var resp = jsonDecode(response.body);
-      print(resp["access_token"]);
-    } else {
-      print(response.reasonPhrase);
-    }
+    return await http.Response.fromStream(sResponse);
   }
+}
+
+showAlertDialog(BuildContext context) {
+  Widget okButton = TextButton(
+    child: Text("OK"),
+    onPressed: () {
+      Navigator.of(context).pop();
+    },
+  );
+
+  AlertDialog alert = AlertDialog(
+    title: Text("Greška"),
+    content: Text("Pogrešni pristupni podaci, molimo unesite ih ponovo!"),
+    actions: [
+      okButton,
+    ],
+  );
+
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
 }

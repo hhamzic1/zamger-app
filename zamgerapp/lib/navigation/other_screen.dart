@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:zamgerapp/configuration/themeconfiguration.dart';
 
-class Screen2 extends StatelessWidget {
+class OtherScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

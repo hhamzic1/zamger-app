@@ -1,0 +1,13 @@
+{
+    "id": 6627,
+    "name": "Analiza pristupa Internetu",
+    "nrAssignments": 1,
+    "maxScore": 2,
+    "deadline": "2021-03-11 23:59:59",
+    "active": true,
+    "automatedTesting": false,
+    "attachment": true,
+    "allowedExtensions": ".pdf",
+    "publishedDateTime": "2021-03-03 13:32:58",
+    "readonly": false
+}
