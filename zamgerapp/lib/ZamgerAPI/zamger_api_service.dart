@@ -7,7 +7,7 @@ part 'zamger_api_service.chopper.dart';
 @ChopperApi()
 abstract class ZamgerAPIService extends ChopperService {
   //ovdje se sada pišu metode za čitav zamger api
-
+  static _$ZamgerAPIService service = null;
   //PERSON
   @Get(path: '/person&resolve[]=ExtendedPerson')
   Future<Response> currentPerson();
@@ -125,14 +125,17 @@ abstract class ZamgerAPIService extends ChopperService {
   //zamger api client
 
   static ZamgerAPIService create() {
-    final client = ChopperClient(
-        baseUrl: 'https://zamger.etf.unsa.ba/api_v6',
-        services: [
-          _$ZamgerAPIService(),
-        ],
-        converter: JsonConverter(),
-        interceptors: [HeaderInterceptor()]);
-    return _$ZamgerAPIService(client);
+    if (service == null) {
+      final client = ChopperClient(
+          baseUrl: 'https://zamger.etf.unsa.ba/api_v6',
+          services: [
+            _$ZamgerAPIService(),
+          ],
+          converter: JsonConverter(),
+          interceptors: [HeaderInterceptor()]);
+      service = _$ZamgerAPIService(client);
+    }
+    return service;
   }
 }
 

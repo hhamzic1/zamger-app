@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:zamgerapp/ZamgerAPI/secure_storage.dart';
+import 'package:zamgerapp/ZamgerAPI/zamger_api_service.dart';
 import '../login_screen.dart';
 import 'package:http/http.dart' as http;
 
@@ -44,6 +45,9 @@ class ButtonLoginState extends State<ButtonLogin> {
               var responseBody = jsonDecode(response.body);
               await Credentials.saveTokens(
                   responseBody['access_token'], responseBody['refresh_token']);
+              ZamgerAPIService.create();
+              usernameController.text = '';
+              passwordController.text = '';
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => HomePage()),

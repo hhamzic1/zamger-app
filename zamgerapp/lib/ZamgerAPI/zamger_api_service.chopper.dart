@@ -35,7 +35,7 @@ class _$ZamgerAPIService extends ZamgerAPIService {
     final $url = '/person/search';
     final $params = <String, dynamic>{'query': name};
     final $request = Request('GET', $url, client.baseUrl, parameters: $params);
-    client.send<dynamic, dynamic>($request);
+    return client.send<dynamic, dynamic>($request);
   }
 
   @override

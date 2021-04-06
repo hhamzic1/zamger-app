@@ -17,3 +17,4 @@ export 'messages.dart';
 export 'person.dart';
 export 'placeOfBirth.dart';
 export 'rss.dart';
+export 'persons.dart';

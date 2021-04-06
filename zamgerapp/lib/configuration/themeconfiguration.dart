@@ -9,7 +9,6 @@ List<BoxShadow> shadowList = [
 List<Map> drawerItems = [
   {'icon': FontAwesomeIcons.houseUser, 'title': 'Početna'},
   {'icon': Icons.inbox, 'title': 'Inbox'},
-  {'icon': Icons.outbox, 'title': 'Outbox'},
   {'icon': FontAwesomeIcons.pen, 'title': 'Ispiti'},
   {'icon': Icons.book, 'title': 'Zadaće'},
   {'icon': FontAwesomeIcons.userAlt, 'title': 'Moj profil'}

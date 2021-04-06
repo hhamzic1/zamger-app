@@ -1,7 +1,6 @@
 import 'package:fl_animated_linechart/common/pair.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 import 'package:swipedetector/swipedetector.dart';
 import 'package:zamgerapp/ZamgerAPI/zamger_api_service.dart';
 import 'package:zamgerapp/models/index.dart';
@@ -11,21 +10,25 @@ class MessageScreen extends StatefulWidget {
   String _time;
   Person _person;
   int _me;
+  int _messageId;
   String _type;
-  MessageScreen(String msg, String time, Person prsn, int me, String type) {
+  MessageScreen(
+      int msgId, String msg, String time, Person prsn, int me, String type) {
     _message = msg;
     _time = time;
     _person = prsn;
     _me = me;
     _type = type;
+    _messageId = msgId;
   }
   @override
   _MessageState createState() =>
-      _MessageState(_message, _time, _person, _me, _type);
+      _MessageState(_messageId, _message, _time, _person, _me, _type);
 }
 
 class _MessageState extends State<MessageScreen> {
   String _message;
+  int _messageId;
   String _time;
   Person _person;
   int _me;
@@ -38,15 +41,38 @@ class _MessageState extends State<MessageScreen> {
   void initState() {
     super.initState();
     _conversation.add(new Pair(_message, new Pair(_time, _person)));
+    if (_type == 'compose') {
+      _fetchMyId();
+    }
+    if (_type == 'unread') {
+      _markMessageAsSeen();
+    }
+  }
+
+  Future<void> _fetchMyId() async {
+    var response = await ZamgerAPIService.service.currentPerson();
+    if (response.isSuccessful) {
+      Person person = Person.fromJson(response.body);
+      _me = person.id;
+    }
+  }
+
+  Future<void> _markMessageAsSeen() async {
+    var response = await ZamgerAPIService.service.getMessageById(_messageId);
+    if (response.isSuccessful) {
+      Message msg = Message.fromJson(response.body);
+    }
   }
 
   final replyController = TextEditingController();
   static final DateFormat formatter = DateFormat('yyyy-MM-dd HH:mm:ss');
-  _MessageState(String msg, String time, Person prsn, int me, String type) {
+  _MessageState(int messageId, String msg, String time, Person prsn, int me,
+      String type) {
     _message = msg;
     _time = time;
     _person = prsn;
     _me = me;
+    _messageId = messageId;
     _type = type;
     if (type == 'outbox') {
       _isSendButtonDisabled = true;
@@ -172,7 +198,7 @@ class _MessageState extends State<MessageScreen> {
                 padding: EdgeInsets.all(8),
                 itemCount: _conversation.length,
                 itemBuilder: (BuildContext context, int index) {
-                  if (_type != 'outbox') {
+                  if (_type != 'outbox' && _type != 'compose') {
                     if (index < 1) {
                       return Column(
                         children: [
@@ -194,6 +220,14 @@ class _MessageState extends State<MessageScreen> {
                               _conversation[index].right.left)
                         ],
                       );
+                    } else {
+                      return message(_conversation[index].left, 'sent',
+                          _conversation[index].right.left);
+                    }
+                  } else if (_type == 'compose') {
+                    if (index < 1) {
+                      return receiverDetails('Ja',
+                          'https://library.kissclipart.com/20180906/wkw/kissclipart-user-icon-png-clipart-user-profile-computer-icons-94f08bfdb73bc68b.jpg');
                     } else {
                       return message(_conversation[index].left, 'sent',
                           _conversation[index].right.left);
@@ -231,8 +265,7 @@ class _MessageState extends State<MessageScreen> {
     msg.text = replyController.text;
     msg.unread = false;
 
-    var response = await Provider.of<ZamgerAPIService>(context, listen: false)
-        .sendMessage(msg);
+    var response = await ZamgerAPIService.service.sendMessage(msg);
     if (response.isSuccessful) {
       Message responseMessage = Message.fromJson(response.body);
       _conversation.add(new Pair(responseMessage.text,

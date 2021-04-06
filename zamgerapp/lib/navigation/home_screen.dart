@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:zamgerapp/ZamgerAPI/zamger_api_service.dart';
 import 'package:zamgerapp/configuration/themeconfiguration.dart';
+import 'package:zamgerapp/main.dart';
 import 'package:zamgerapp/models/index.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -86,8 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 1000,
               child: TextButton(
                   onPressed: () async {
-                    var response = await Provider.of<ZamgerAPIService>(context,
-                            listen: false)
+                    var response = await ZamgerAPIService.create()
                         .getRecentRecievedMessages(10);
                     Messages inbox = Messages.fromJson(response.body);
                     print(inbox.results);

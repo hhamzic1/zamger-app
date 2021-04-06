@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:zamgerapp/ZamgerAPI/zamger_api_service.dart';
 import 'package:zamgerapp/models/index.dart';
-import 'message_screen.dart';
+import 'package:zamgerapp/navigation/messaging/compose_message_screen.dart';
+import 'package:zamgerapp/widgets/widgets.dart';
 
 class Inbox extends StatefulWidget {
   @override
-  _Screen1State createState() => _Screen1State();
+  _InboxState createState() => _InboxState();
 }
 
-class _Screen1State extends State<Inbox> with SingleTickerProviderStateMixin {
+class _InboxState extends State<Inbox> with SingleTickerProviderStateMixin {
   TabController tabController;
   int pageIndex;
   Messages _inbox;
@@ -20,30 +20,28 @@ class _Screen1State extends State<Inbox> with SingleTickerProviderStateMixin {
   void initState() {
     super.initState();
     tabController = TabController(length: 3, vsync: this, initialIndex: 0);
-    fetchInbox();
-    fetchOutbox();
-    fetchUnread();
+    _fetchInbox();
+    _fetchOutbox();
+    _fetchUnread();
   }
 
-  void fetchInbox() async {
-    var response = await Provider.of<ZamgerAPIService>(context, listen: false)
-        .getRecentRecievedMessages(1000);
+  void _fetchInbox() async {
+    var response =
+        await ZamgerAPIService.service.getRecentRecievedMessages(1000);
     setState(() {
       _inbox = Messages.fromJson(response.body);
     });
   }
 
-  void fetchOutbox() async {
-    var response = await Provider.of<ZamgerAPIService>(context, listen: false)
-        .getRecentSentMessages(1000);
+  void _fetchOutbox() async {
+    var response = await ZamgerAPIService.service.getRecentSentMessages(1000);
     setState(() {
       _outbox = Messages.fromJson(response.body);
     });
   }
 
-  void fetchUnread() async {
-    var response = await Provider.of<ZamgerAPIService>(context, listen: false)
-        .getUnreadMessages();
+  void _fetchUnread() async {
+    var response = await ZamgerAPIService.service.getUnreadMessages();
     setState(() {
       _unread = Messages.fromJson(response.body);
     });
@@ -71,6 +69,17 @@ class _Screen1State extends State<Inbox> with SingleTickerProviderStateMixin {
                     child: AppBar(
                       backgroundColor: Colors.amber[900],
                       title: Text("Inbox"),
+                      actions: [
+                        TextButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => ComposeMessagePage(),
+                                  ));
+                            },
+                            child: Icon(Icons.add_sharp, color: Colors.white))
+                      ],
                       centerTitle: true,
                       elevation: 0,
                       leading: TextButton(
@@ -133,100 +142,6 @@ class _Screen1State extends State<Inbox> with SingleTickerProviderStateMixin {
     );
   }
 
-  Widget chatItems(userName, message, time, person, me, type) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => MessageScreen(message, time, person, me, type),
-          ),
-        );
-      },
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: 18, left: 2, right: 2),
-        child: Container(
-          height: 90,
-          decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                  color: Colors.grey[300].withOpacity(0.7),
-                  blurRadius: 2,
-                  spreadRadius: 2)
-            ],
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(
-              50,
-            ),
-          ),
-          child: Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: CircleAvatar(
-                  backgroundImage: NetworkImage(
-                      'https://library.kissclipart.com/20180906/wkw/kissclipart-user-icon-png-clipart-user-profile-computer-icons-94f08bfdb73bc68b.jpg'),
-                  backgroundColor: Colors.transparent,
-                  radius: 25,
-                ),
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Container(
-                        width: 120,
-                        child: Text(
-                          userName,
-                          maxLines: 1,
-                          overflow: TextOverflow.fade,
-                          softWrap: false,
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 50),
-                      Text(
-                        time,
-                        style: TextStyle(
-                          fontSize: 12,
-                          letterSpacing: -0.6,
-                          color: Colors.amber[800],
-                        ),
-                      ),
-                      SizedBox(width: 5)
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Container(
-                        width: 200,
-                        child: Text(
-                          message,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            color: Colors.grey[500].withOpacity(0.7),
-                            fontSize: 13,
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
-                ],
-              )
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget _buildInbox() {
     return _inbox != null
         ? RefreshIndicator(
@@ -237,7 +152,8 @@ class _Screen1State extends State<Inbox> with SingleTickerProviderStateMixin {
                   return Row(
                     children: <Widget>[
                       SizedBox(height: 10),
-                      chatItems(
+                      ChatItems(
+                          _inbox.results[index].id,
                           _inbox.results[index].sender.login,
                           _inbox.results[index].text,
                           _inbox.results[index].time,
@@ -249,7 +165,7 @@ class _Screen1State extends State<Inbox> with SingleTickerProviderStateMixin {
                 }),
             onRefresh: () async {
               setState(() {
-                fetchInbox();
+                _fetchInbox();
               });
             },
           )
@@ -266,7 +182,8 @@ class _Screen1State extends State<Inbox> with SingleTickerProviderStateMixin {
                   return Row(
                     children: <Widget>[
                       SizedBox(height: 10),
-                      chatItems(
+                      ChatItems(
+                          _outbox.results[index].id,
                           _outbox.results[index].receiverPerson.login,
                           _outbox.results[index].text,
                           _outbox.results[index].time,
@@ -278,7 +195,7 @@ class _Screen1State extends State<Inbox> with SingleTickerProviderStateMixin {
                 }),
             onRefresh: () async {
               setState(() {
-                fetchOutbox();
+                _fetchOutbox();
               });
             },
           )
@@ -295,7 +212,8 @@ class _Screen1State extends State<Inbox> with SingleTickerProviderStateMixin {
                   return Row(
                     children: <Widget>[
                       SizedBox(height: 10),
-                      chatItems(
+                      ChatItems(
+                          _unread.results[index].id,
                           _unread.results[index].sender.login,
                           _unread.results[index].text,
                           _unread.results[index].time,
@@ -307,7 +225,7 @@ class _Screen1State extends State<Inbox> with SingleTickerProviderStateMixin {
                 }),
             onRefresh: () async {
               setState(() {
-                fetchUnread();
+                _fetchUnread();
               });
             },
           )
