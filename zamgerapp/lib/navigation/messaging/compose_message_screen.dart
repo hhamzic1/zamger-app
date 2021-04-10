@@ -9,8 +9,6 @@ class ComposeMessagePage extends StatefulWidget {
 }
 
 class _ComposeMessagePageState extends State<ComposeMessagePage> {
-  // final formKey = new GlobalKey<FormState>();
-  // final key = new GlobalKey<ScaffoldState>();
   final TextEditingController _filter = new TextEditingController();
 
   String _searchText = "";
@@ -118,9 +116,8 @@ class _ComposeMessagePageState extends State<ComposeMessagePage> {
   }
 
   void _getNames() async {
-    final response =
-        await ZamgerAPIService.service.findPersonBySearch(_filter.text);
-    Persons persons = Persons.fromJson(response.body);
+    final response = await ZamgerAPIService.findPersonBySearch(_filter.text);
+    Persons persons = Persons.fromJson(response.data);
     List<Person> tempList = [];
     tempList.addAll(persons.results);
     setState(() {

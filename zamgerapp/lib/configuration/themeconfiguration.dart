@@ -10,6 +10,7 @@ List<Map> drawerItems = [
   {'icon': FontAwesomeIcons.houseUser, 'title': 'Početna'},
   {'icon': Icons.inbox, 'title': 'Inbox'},
   {'icon': FontAwesomeIcons.pen, 'title': 'Ispiti'},
-  {'icon': Icons.book, 'title': 'Zadaće'},
+  {'icon': Icons.assignment_ind_rounded, 'title': 'Zadaće'},
+  {'icon': Icons.contact_mail_rounded, 'title': 'Zahtjevi'},
   {'icon': FontAwesomeIcons.userAlt, 'title': 'Moj profil'}
 ];

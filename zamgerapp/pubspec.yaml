@@ -29,10 +29,10 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   font_awesome_flutter:
-  chopper: ^3.0.6
   flutter_secure_storage:
   analyzer:
   http:
+  dio:
   swipedetector:
   intl:
   fl_animated_linechart: ^1.1.4

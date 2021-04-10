@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:fl_animated_linechart/common/pair.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -50,17 +51,17 @@ class _MessageState extends State<MessageScreen> {
   }
 
   Future<void> _fetchMyId() async {
-    var response = await ZamgerAPIService.service.currentPerson();
-    if (response.isSuccessful) {
-      Person person = Person.fromJson(response.body);
+    var response = await ZamgerAPIService.currentPerson();
+    if (response.statusCode == 200) {
+      Person person = Person.fromJson(response.data);
       _me = person.id;
     }
   }
 
   Future<void> _markMessageAsSeen() async {
-    var response = await ZamgerAPIService.service.getMessageById(_messageId);
-    if (response.isSuccessful) {
-      Message msg = Message.fromJson(response.body);
+    Response response = await ZamgerAPIService.getMessageById(_messageId);
+    if (response.statusCode == 200) {
+      Message msg = Message.fromJson(response.data);
     }
   }
 
@@ -265,9 +266,9 @@ class _MessageState extends State<MessageScreen> {
     msg.text = replyController.text;
     msg.unread = false;
 
-    var response = await ZamgerAPIService.service.sendMessage(msg);
-    if (response.isSuccessful) {
-      Message responseMessage = Message.fromJson(response.body);
+    var response = await ZamgerAPIService.sendMessage(msg);
+    if (response.statusCode == 201) {
+      Message responseMessage = Message.fromJson(response.data);
       _conversation.add(new Pair(responseMessage.text,
           new Pair(formatter.format(DateTime.now()), null)));
       replyController.text = '';

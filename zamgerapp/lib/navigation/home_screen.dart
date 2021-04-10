@@ -86,9 +86,9 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 1000,
               child: TextButton(
                   onPressed: () async {
-                    var response = await ZamgerAPIService.create()
-                        .getRecentRecievedMessages(10);
-                    Messages inbox = Messages.fromJson(response.body);
+                    var response =
+                        await ZamgerAPIService.getRecentRecievedMessages(10);
+                    Messages inbox = Messages.fromJson(response.data);
                     print(inbox.results);
                   },
                   child: Text("See tokens")),

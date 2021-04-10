@@ -38,26 +38,8 @@ class ButtonLoginState extends State<ButtonLogin> {
           borderRadius: BorderRadius.circular(30),
         ),
         child: TextButton(
-          onPressed: () async {
-            var response = await loginUser(
-                usernameController.text, passwordController.text);
-            if (response.statusCode == 200) {
-              var responseBody = jsonDecode(response.body);
-              await Credentials.saveTokens(
-                  responseBody['access_token'], responseBody['refresh_token']);
-              ZamgerAPIService.create();
-              usernameController.text = '';
-              passwordController.text = '';
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => HomePage()),
-              );
-            } else {
-              usernameController.text = '';
-              passwordController.text = '';
-              showAlertDialog(context);
-            }
-          },
+          onPressed: () async =>
+              loginUser(usernameController.text, passwordController.text),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -95,30 +77,46 @@ class ButtonLoginState extends State<ButtonLogin> {
     request.headers.addAll(headers);
 
     http.StreamedResponse sResponse = await request.send();
-    return await http.Response.fromStream(sResponse);
+    var response = await http.Response.fromStream(sResponse);
+    if (response.statusCode == 200) {
+      var responseBody = jsonDecode(response.body);
+      await Credentials.saveTokens(
+          responseBody['access_token'], responseBody['refresh_token']);
+      ZamgerAPIService();
+      usernameController.text = '';
+      passwordController.text = '';
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage()),
+      );
+    } else {
+      usernameController.text = '';
+      passwordController.text = '';
+      showAlertDialog(context);
+    }
   }
-}
 
-showAlertDialog(BuildContext context) {
-  Widget okButton = TextButton(
-    child: Text("OK"),
-    onPressed: () {
-      Navigator.of(context).pop();
-    },
-  );
+  showAlertDialog(BuildContext context) {
+    Widget okButton = TextButton(
+      child: Text("OK"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
 
-  AlertDialog alert = AlertDialog(
-    title: Text("Greška"),
-    content: Text("Pogrešni pristupni podaci, molimo unesite ih ponovo!"),
-    actions: [
-      okButton,
-    ],
-  );
+    AlertDialog alert = AlertDialog(
+      title: Text("Greška"),
+      content: Text("Pogrešni pristupni podaci, molimo unesite ih ponovo!"),
+      actions: [
+        okButton,
+      ],
+    );
 
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return alert;
-    },
-  );
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
 }

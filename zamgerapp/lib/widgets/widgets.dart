@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:zamgerapp/ZamgerAPI/secure_storage.dart';
+import 'package:zamgerapp/ZamgerAPI/zamger_api_service.dart';
+import 'package:zamgerapp/login/pages/login_screen.dart';
 import 'package:zamgerapp/models/person.dart';
 import 'package:zamgerapp/navigation/messaging/message_screen.dart';
+import 'package:http/http.dart' as http;
 
 class ChatItems extends StatelessWidget {
   String _userName;
@@ -115,5 +119,52 @@ class ChatItems extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+Future<Widget> checkAPPCredentials() async {
+  await Credentials.deleteTokens();
+  String accessToken = await Credentials.getAccessToken();
+  String refreshToken = await Credentials.getRefreshToken();
+  if (accessToken == null || refreshToken == null) {
+    print("Ovdje je ušlo");
+    return LoginPage();
+  } else {
+    var headers = {'Authorization': 'Bearer ' + accessToken};
+    var request = http.Request(
+        'GET', Uri.parse('https://zamger.etf.unsa.ba/api_v6/person'));
+    request.headers.addAll(headers);
+    http.StreamedResponse response = await request.send();
+    if (response.statusCode == 200) {
+      ZamgerAPIService();
+      return HomePage();
+    } else {
+      print("dole je ušlo");
+      return LoginPage();
+    }
+  }
+}
+
+class CurvePainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    var paint = Paint();
+    paint.color = Colors.amber[900];
+    paint.style = PaintingStyle.fill;
+
+    var path = Path();
+
+    path.moveTo(0, size.height * 0.55);
+    path.quadraticBezierTo(
+        size.width / 2, 1.5 * size.height, size.width, size.height * 0.5);
+    path.lineTo(size.width, 0);
+    path.lineTo(0, 0);
+
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return true;
   }
 }

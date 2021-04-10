@@ -26,24 +26,23 @@ class _InboxState extends State<Inbox> with SingleTickerProviderStateMixin {
   }
 
   void _fetchInbox() async {
-    var response =
-        await ZamgerAPIService.service.getRecentRecievedMessages(1000);
+    var response = await ZamgerAPIService.getRecentRecievedMessages(1000);
     setState(() {
-      _inbox = Messages.fromJson(response.body);
+      _inbox = Messages.fromJson(response.data);
     });
   }
 
   void _fetchOutbox() async {
-    var response = await ZamgerAPIService.service.getRecentSentMessages(1000);
+    var response = await ZamgerAPIService.getRecentSentMessages(1000);
     setState(() {
-      _outbox = Messages.fromJson(response.body);
+      _outbox = Messages.fromJson(response.data);
     });
   }
 
   void _fetchUnread() async {
-    var response = await ZamgerAPIService.service.getUnreadMessages();
+    var response = await ZamgerAPIService.getUnreadMessages();
     setState(() {
-      _unread = Messages.fromJson(response.body);
+      _unread = Messages.fromJson(response.data);
     });
   }
 

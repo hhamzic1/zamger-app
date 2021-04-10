@@ -7,6 +7,8 @@ import 'package:zamgerapp/models/index.dart';
 import 'package:zamgerapp/navigation/messaging/inbox_screen.dart';
 import 'package:zamgerapp/navigation/other_screen.dart';
 
+import 'certificates/certificates_screen.dart';
+
 class DrawerScreen extends StatefulWidget {
   @override
   _DrawerScreenState createState() => _DrawerScreenState();
@@ -14,6 +16,7 @@ class DrawerScreen extends StatefulWidget {
 
 class _DrawerScreenState extends State<DrawerScreen> {
   String _nameSurname = "Zamger";
+  Person _currentPerson;
   @override
   void initState() {
     super.initState();
@@ -81,6 +84,12 @@ class _DrawerScreenState extends State<DrawerScreen> {
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (context) => Inbox()))
                                 }
+                              else if (element['title'] == 'Zahtjevi')
+                                {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) =>
+                                          CertificatesPage(_currentPerson)))
+                                }
                               else
                                 {
                                   Navigator.of(context).push(MaterialPageRoute(
@@ -139,9 +148,10 @@ class _DrawerScreenState extends State<DrawerScreen> {
   }
 
   _fetchUserNameSurname() async {
-    var response = await ZamgerAPIService.service.currentPerson();
-    Person person = Person.fromJson(response.body);
+    var response = await ZamgerAPIService.currentPerson();
+    Person person = Person.fromJson(response.data);
     setState(() {
+      _currentPerson = person;
       _nameSurname = person.name + " " + person.surname;
     });
   }
