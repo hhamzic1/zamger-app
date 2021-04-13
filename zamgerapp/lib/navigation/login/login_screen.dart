@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:zamgerapp/login/pages/widgets/button.dart';
-import 'package:zamgerapp/login/pages/widgets/inputEmail.dart';
-import 'package:zamgerapp/login/pages/widgets/password.dart';
-import 'package:zamgerapp/login/pages/widgets/textLogin.dart';
-import 'package:zamgerapp/login/pages/widgets/verticalText.dart';
+import 'package:zamgerapp/configuration/themeconfiguration.dart';
 import 'package:zamgerapp/navigation/drawer.dart';
 import 'package:zamgerapp/navigation/home_screen.dart';
+import 'package:zamgerapp/navigation/login/widgets/button.dart';
+import 'package:zamgerapp/navigation/login/widgets/inputEmail.dart';
+import 'package:zamgerapp/navigation/login/widgets/password.dart';
+import 'package:zamgerapp/navigation/login/widgets/textLogin.dart';
+import 'package:zamgerapp/navigation/login/widgets/verticalText.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -21,7 +22,7 @@ class _LoginPageState extends State<LoginPage> {
           gradient: LinearGradient(
               begin: Alignment.topRight,
               end: Alignment.bottomLeft,
-              colors: [Colors.yellow[300], Colors.amber[900]]),
+              colors: [lightBlue, etfBlue]),
         ),
         child: ListView(
           children: <Widget>[

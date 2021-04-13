@@ -1,32 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:zamgerapp/ZamgerAPI/zamger_api_service.dart';
 import 'package:zamgerapp/configuration/themeconfiguration.dart';
-import 'package:zamgerapp/models/certificates.dart';
-import 'package:zamgerapp/models/person.dart';
-import 'package:zamgerapp/navigation/certificates/create_certificate_screen.dart';
+import 'package:zamgerapp/models/homeworksInfo.dart';
+import 'package:zamgerapp/models/index.dart';
+import 'package:zamgerapp/navigation/homeworks/homework_info_screen.dart';
 import 'package:zamgerapp/widgets/widgets.dart';
 
-class CertificatesPage extends StatefulWidget {
+class HomeworksPage extends StatefulWidget {
   Person _currentPerson;
-  CertificatesPage(Person currentPerson) {
+  HomeworksPage(Person currentPerson) {
     _currentPerson = currentPerson;
   }
 
   @override
-  _CertificatesState createState() => _CertificatesState(_currentPerson);
+  _HomeworksState createState() => _HomeworksState(_currentPerson);
 }
 
-class _CertificatesState extends State<CertificatesPage> {
-  Certificates _certs;
-  dynamic _purposeTypes;
+class _HomeworksState extends State<HomeworksPage> {
+  HomeworksInfo _homeworks;
   Person _currentPerson;
-  _CertificatesState(Object currentPerson) {
+
+  _HomeworksState(Object currentPerson) {
     _currentPerson = currentPerson;
   }
+
   @override
   void initState() {
     super.initState();
-    _fetchCertificates();
+    _fetchActiveHomeworks();
   }
 
   @override
@@ -50,19 +51,7 @@ class _CertificatesState extends State<CertificatesPage> {
                     preferredSize: Size.fromHeight(100),
                     child: AppBar(
                       backgroundColor: etfBlue,
-                      title: Text("Zahtjevi"),
-                      actions: [
-                        TextButton(
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (_) => CreateCertificate(
-                                        _purposeTypes, _currentPerson.id),
-                                  ));
-                            },
-                            child: Icon(Icons.add_sharp, color: Colors.white))
-                      ],
+                      title: Text("Aktivne zadaće"),
                       centerTitle: true,
                       elevation: 0,
                       leading: TextButton(
@@ -74,7 +63,7 @@ class _CertificatesState extends State<CertificatesPage> {
                     ),
                   ),
                 ),
-                Expanded(child: _buildCertsList()),
+                Expanded(child: _buildActiveHomeworks()),
               ],
             ),
           ],
@@ -83,27 +72,23 @@ class _CertificatesState extends State<CertificatesPage> {
     );
   }
 
-  Future<void> _fetchCertificates() async {
-    var response = await ZamgerAPIService.getMyCertificates(_currentPerson.id);
-    var response2 = await ZamgerAPIService.getCertificatePurposeTypes();
-    setState(() {
-      _purposeTypes = response2.data["purposes"];
-      _certs = Certificates.fromJson(response.data);
-    });
+  Future<void> _fetchActiveHomeworks() async {
+    var response =
+        await ZamgerAPIService.getUpcomingHomeworks(_currentPerson.id);
+    if (response.statusCode == 200) {
+      setState(() {
+        _homeworks = HomeworksInfo.fromJson(response.data);
+      });
+    }
   }
 
-  //status 1 zahtjeva znaci da nije obrađen
-
-  Widget _buildCertsList() {
-    return _certs != null
+  Widget _buildActiveHomeworks() {
+    return _homeworks != null
         ? RefreshIndicator(
             child: ListView.builder(
                 padding: EdgeInsets.fromLTRB(8, 0, 8, 8),
-                itemCount: _certs.results.length,
+                itemCount: _homeworks.results.length,
                 itemBuilder: (BuildContext context, int index) {
-                  var purposeId =
-                      _certs.results[index].certificatePurpose.toString();
-                  var purpose = _purposeTypes[purposeId];
                   return Card(
                     elevation: 8.0,
                     margin: new EdgeInsets.symmetric(
@@ -124,35 +109,31 @@ class _CertificatesState extends State<CertificatesPage> {
                               border: new Border(
                                   right: new BorderSide(
                                       width: 1.0, color: Colors.white24))),
-                          child: _certs.results[index].status == 1
+                          child: _homeworks.results[index].active == true
                               ? Icon(
                                   Icons.timer,
-                                  color: Colors.yellow,
+                                  color: Colors.white,
                                   size: 30,
                                 )
                               : Icon(
-                                  Icons.check,
-                                  color: Colors.green,
+                                  Icons.hourglass_bottom_rounded,
+                                  color: Colors.red,
                                   size: 30,
                                 ),
                         ),
                         title: Text(
-                          _certs.results[index].certificateType == 1
-                              ? 'Potvrda o redovnom studiju'
-                              : 'Uvjerenje o položenim ispitima',
+                          _homeworks.results[index].courseUnit.abbrev,
                           style: TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold),
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 25),
                         ),
                         subtitle: Column(children: [
                           Row(
                             children: <Widget>[
-                              Icon(Icons.linear_scale,
-                                  color: _certs.results[index].status == 1
-                                      ? Colors.yellowAccent
-                                      : Colors.green),
                               Flexible(
                                 child: Text(
-                                  " U svrhu: " + purpose,
+                                  "Naziv: " + _homeworks.results[index].name,
                                   style: TextStyle(color: Colors.white),
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -161,36 +142,32 @@ class _CertificatesState extends State<CertificatesPage> {
                           ),
                           Row(
                             children: [
-                              Text(_certs.results[index].datetime,
+                              Text("Rok: " + _homeworks.results[index].deadline,
                                   style: TextStyle(color: Colors.white))
                             ],
                           )
                         ]),
-                        trailing: _certs.results[index].status == 2
-                            ? null
-                            : TextButton(
-                                child: Icon(Icons.cancel,
-                                    color: Colors.red, size: 30.0),
-                                onPressed: () async {
-                                  await _cancelCertificate(
-                                      _certs.results[index].id);
-                                },
-                              ),
+                        trailing: TextButton(
+                          child: Icon(Icons.arrow_forward_ios,
+                              color: Colors.white, size: 30.0),
+                          onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => HomeworkInfoPage(
+                                    _homeworks.results[index].id,
+                                    _homeworks.results[index].courseUnit.id,
+                                    _currentPerson)));
+                          },
+                        ),
                       ),
                     ),
                   );
                 }),
             onRefresh: () async {
               setState(() {
-                _fetchCertificates();
+                _fetchActiveHomeworks();
               });
             },
           )
         : Center(child: CircularProgressIndicator());
-  }
-
-  Future<void> _cancelCertificate(int id) async {
-    await ZamgerAPIService.cancelCertificateById(id);
-    _fetchCertificates();
   }
 }

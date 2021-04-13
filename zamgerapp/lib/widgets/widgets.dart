@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:zamgerapp/ZamgerAPI/secure_storage.dart';
 import 'package:zamgerapp/ZamgerAPI/zamger_api_service.dart';
-import 'package:zamgerapp/login/pages/login_screen.dart';
+import 'package:zamgerapp/configuration/themeconfiguration.dart';
 import 'package:zamgerapp/models/person.dart';
+import 'package:zamgerapp/navigation/login/login_screen.dart';
 import 'package:zamgerapp/navigation/messaging/message_screen.dart';
 import 'package:http/http.dart' as http;
 
@@ -90,7 +91,7 @@ class ChatItems extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 12,
                           letterSpacing: -0.6,
-                          color: Colors.amber[800],
+                          color: etfBlue,
                         ),
                       ),
                       SizedBox(width: 5)
@@ -149,7 +150,7 @@ class CurvePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     var paint = Paint();
-    paint.color = Colors.amber[900];
+    paint.color = etfBlue;
     paint.style = PaintingStyle.fill;
 
     var path = Path();

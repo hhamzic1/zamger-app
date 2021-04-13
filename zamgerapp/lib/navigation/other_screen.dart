@@ -69,7 +69,7 @@ class OtherScreen extends StatelessWidget {
                     height: 60,
                     width: 70,
                     decoration: BoxDecoration(
-                        color: primaryGreen,
+                        color: etfBlue,
                         borderRadius: BorderRadius.circular(20)),
                     child: Icon(
                       Icons.favorite_border,
@@ -83,7 +83,7 @@ class OtherScreen extends StatelessWidget {
                     child: Container(
                       height: 60,
                       decoration: BoxDecoration(
-                          color: primaryGreen,
+                          color: etfBlue,
                           borderRadius: BorderRadius.circular(20)),
                       child: Center(
                           child: Text(

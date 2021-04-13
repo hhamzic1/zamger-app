@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:zamgerapp/login/pages/widgets/button.dart';
+import 'button.dart';
 
 class PasswordInput extends StatefulWidget {
   @override

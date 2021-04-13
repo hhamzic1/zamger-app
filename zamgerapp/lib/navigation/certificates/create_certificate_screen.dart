@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:zamgerapp/ZamgerAPI/zamger_api_service.dart';
+import 'package:zamgerapp/configuration/themeconfiguration.dart';
 import 'package:zamgerapp/models/certificate.dart';
 import 'package:zamgerapp/models/index.dart';
-import 'package:zamgerapp/navigation/certificates/certificates_screen.dart';
 import 'package:zamgerapp/widgets/widgets.dart';
 
 class CreateCertificate extends StatefulWidget {
@@ -14,7 +14,7 @@ class CreateCertificate extends StatefulWidget {
     _purposeTypes = purposeTypes;
     _currentPerson = new Person();
     _currentPerson.id = currentPersonId;
-    //indeksi će činiti parove
+
     _purposeTypes.forEach((k, v) {
       _purposes.add(v);
       _types.add(k);
@@ -53,7 +53,6 @@ class _CreateCertificateState extends State<CreateCertificate> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
       body: SafeArea(
         child: Stack(
@@ -72,7 +71,7 @@ class _CreateCertificateState extends State<CreateCertificate> {
                   child: PreferredSize(
                     preferredSize: Size.fromHeight(100),
                     child: AppBar(
-                      backgroundColor: Colors.amber[900],
+                      backgroundColor: etfBlue,
                       title: Text("Kreiraj novi zahtjev"),
                       centerTitle: true,
                       elevation: 0,
@@ -89,9 +88,12 @@ class _CreateCertificateState extends State<CreateCertificate> {
                   'Tip zahtjeva: ',
                   style: TextStyle(
                       fontSize: 16,
-                      color: Colors.black,
+                      color: Colors.white,
                       fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
+                ),
+                SizedBox(
+                  height: 10,
                 ),
                 Container(
                   width: 300,
@@ -100,7 +102,10 @@ class _CreateCertificateState extends State<CreateCertificate> {
                       border: Border.all(color: Colors.black, width: 1),
                       borderRadius: BorderRadius.circular(15)),
                   child: DropdownButton(
-                    hint: Text('Izaberite tip'),
+                    hint: Text(
+                      'Izaberite tip',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
                     isExpanded: true,
                     underline: SizedBox(),
                     value: _chosenCertName,
@@ -124,7 +129,7 @@ class _CreateCertificateState extends State<CreateCertificate> {
                   'U svrhu:',
                   style: TextStyle(
                       fontSize: 16,
-                      color: Colors.black,
+                      color: Colors.white,
                       fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                 ),
@@ -138,7 +143,10 @@ class _CreateCertificateState extends State<CreateCertificate> {
                       border: Border.all(color: Colors.black, width: 1),
                       borderRadius: BorderRadius.circular(15)),
                   child: DropdownButton(
-                    hint: Text('Izaberite svrhu'),
+                    hint: Text(
+                      'Izaberite svrhu',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
                     isExpanded: true,
                     underline: SizedBox(),
                     value: _chosenPurpose,
@@ -164,7 +172,7 @@ class _CreateCertificateState extends State<CreateCertificate> {
                     alignment: Alignment.bottomRight,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.amber[900], // background
+                        primary: etfBlue, // background
                         onPrimary: Colors.white, // foreground
                       ),
                       onPressed: () async {
@@ -207,6 +215,7 @@ class _CreateCertificateState extends State<CreateCertificate> {
         return _certTypes[i];
       }
     }
+    return -1;
   }
 
   Future<void> _sendNewCertificate(chosenPurpose, chosenCertName) async {
@@ -219,11 +228,7 @@ class _CreateCertificateState extends State<CreateCertificate> {
     var response =
         await ZamgerAPIService.sendCertificate(cert.student.id, cert);
     if (response.statusCode == 201) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-            builder: (context) => CertificatesPage(_currentPerson)),
-      );
+      Navigator.pop(context);
     } else {
       showAlertDialog(context);
     }

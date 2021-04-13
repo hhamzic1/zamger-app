@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:zamgerapp/ZamgerAPI/zamger_api_service.dart';
+import 'package:zamgerapp/configuration/themeconfiguration.dart';
 import 'package:zamgerapp/models/index.dart';
 import 'package:zamgerapp/navigation/messaging/compose_message_screen.dart';
 import 'package:zamgerapp/widgets/widgets.dart';
@@ -66,7 +67,7 @@ class _InboxState extends State<Inbox> with SingleTickerProviderStateMixin {
                   child: PreferredSize(
                     preferredSize: Size.fromHeight(100),
                     child: AppBar(
-                      backgroundColor: Colors.amber[900],
+                      backgroundColor: etfBlue,
                       title: Text("Inbox"),
                       actions: [
                         TextButton(
@@ -229,29 +230,5 @@ class _InboxState extends State<Inbox> with SingleTickerProviderStateMixin {
             },
           )
         : Center(child: CircularProgressIndicator());
-  }
-}
-
-class CurvePainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    var paint = Paint();
-    paint.color = Colors.amber[900];
-    paint.style = PaintingStyle.fill;
-
-    var path = Path();
-
-    path.moveTo(0, size.height * 0.55);
-    path.quadraticBezierTo(
-        size.width / 2, 1.5 * size.height, size.width, size.height * 0.5);
-    path.lineTo(size.width, 0);
-    path.lineTo(0, 0);
-
-    canvas.drawPath(path, paint);
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) {
-    return true;
   }
 }

@@ -66,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         children: [
                           Icon(
                             Icons.location_on,
-                            color: primaryGreen,
+                            color: etfBlue,
                           ),
                           Text('Bosnia and Herzegovina'),
                         ],

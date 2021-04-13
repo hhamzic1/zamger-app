@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:swipedetector/swipedetector.dart';
 import 'package:zamgerapp/ZamgerAPI/zamger_api_service.dart';
+import 'package:zamgerapp/configuration/themeconfiguration.dart';
 import 'package:zamgerapp/models/index.dart';
 
 class MessageScreen extends StatefulWidget {
@@ -89,13 +90,9 @@ class _MessageState extends State<MessageScreen> {
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                  colors: [
-                    Colors.amber[900],
-                    Colors.red,
-                  ],
-                  begin: Alignment.center,
-                  end: Alignment.centerRight,
-                  stops: [0.5, 03]),
+                  begin: Alignment.topRight,
+                  end: Alignment.bottomLeft,
+                  colors: [lightBlue, etfBlue]),
             ),
             child: Column(
               children: [
@@ -169,7 +166,7 @@ class _MessageState extends State<MessageScreen> {
                           height: 40,
                           width: 40,
                           decoration: BoxDecoration(
-                            color: Colors.amber[900],
+                            color: etfBlue,
                             shape: BoxShape.circle,
                           ),
                           child: TextButton(

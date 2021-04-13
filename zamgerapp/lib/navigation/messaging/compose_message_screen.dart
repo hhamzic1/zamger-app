@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:zamgerapp/ZamgerAPI/zamger_api_service.dart';
+import 'package:zamgerapp/configuration/themeconfiguration.dart';
 import 'package:zamgerapp/models/index.dart';
 import 'package:zamgerapp/widgets/widgets.dart';
 
@@ -53,7 +54,7 @@ class _ComposeMessagePageState extends State<ComposeMessagePage> {
     return new AppBar(
       centerTitle: true,
       title: _appBarTitle,
-      backgroundColor: Colors.amber[900],
+      backgroundColor: etfBlue,
       leading: new IconButton(
         icon: _searchIcon,
         onPressed: _searchPressed,

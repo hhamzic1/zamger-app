@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:zamgerapp/login/pages/widgets/button.dart';
+import 'button.dart';
 
 class InputEmail extends StatefulWidget {
   @override

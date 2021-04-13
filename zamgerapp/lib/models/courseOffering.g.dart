@@ -13,7 +13,10 @@ CourseOffering _$CourseOfferingFromJson(Map<String, dynamic> json) {
         ? null
         : CourseUnit.fromJson(json['CourseUnit'] as Map<String, dynamic>)
     ..semester = json['semester'] as int
-    ..mandatory = json['mandatory'] as bool;
+    ..mandatory = json['mandatory'] as bool
+    ..academicYear = json['AcademicYear'] == null
+        ? null
+        : AcademicYear.fromJson(json['AcademicYear'] as Map<String, dynamic>);
 }
 
 Map<String, dynamic> _$CourseOfferingToJson(CourseOffering instance) =>
@@ -22,4 +25,5 @@ Map<String, dynamic> _$CourseOfferingToJson(CourseOffering instance) =>
       'CourseUnit': instance.courseUnit,
       'semester': instance.semester,
       'mandatory': instance.mandatory,
+      'AcademicYear': instance.academicYear,
     };

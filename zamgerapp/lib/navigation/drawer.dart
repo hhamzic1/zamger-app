@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:zamgerapp/ZamgerAPI/secure_storage.dart';
 import 'package:zamgerapp/ZamgerAPI/zamger_api_service.dart';
 import 'package:zamgerapp/configuration/themeconfiguration.dart';
-import 'package:zamgerapp/login/pages/login_screen.dart';
 import 'package:zamgerapp/models/index.dart';
 import 'package:zamgerapp/navigation/messaging/inbox_screen.dart';
 import 'package:zamgerapp/navigation/other_screen.dart';
 
 import 'certificates/certificates_screen.dart';
+import 'homeworks/homeworks_screen.dart';
+import 'login/login_screen.dart';
+import 'my_study/my_study_screen.dart';
 
 class DrawerScreen extends StatefulWidget {
   @override
@@ -28,7 +30,12 @@ class _DrawerScreenState extends State<DrawerScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.amber[900],
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
+            colors: [lightBlue, etfBlue]),
+      ),
       padding: EdgeInsets.only(top: 50, bottom: 70, left: 10),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -89,6 +96,18 @@ class _DrawerScreenState extends State<DrawerScreen> {
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (context) =>
                                           CertificatesPage(_currentPerson)))
+                                }
+                              else if (element['title'] == 'Zadaće')
+                                {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) =>
+                                          HomeworksPage(_currentPerson)))
+                                }
+                              else if (element['title'] == 'Moj studij')
+                                {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) =>
+                                          MyStudyPage(_currentPerson)))
                                 }
                               else
                                 {

@@ -2,8 +2,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:zamgerapp/ZamgerAPI/secure_storage.dart';
 import 'package:zamgerapp/ZamgerAPI/zamger_api_service.dart';
-import '../login_screen.dart';
+import 'package:zamgerapp/configuration/themeconfiguration.dart';
 import 'package:http/http.dart' as http;
+
+import '../login_screen.dart';
 
 class ButtonLogin extends StatefulWidget {
   @override
@@ -25,7 +27,7 @@ class ButtonLoginState extends State<ButtonLogin> {
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
-              color: Colors.yellow[700],
+              color: etfBlue,
               blurRadius: 10.0,
               spreadRadius: 1.0,
               offset: Offset(

@@ -94,6 +94,18 @@ class ZamgerAPIService {
     return client.get($url, queryParameters: $params);
   }
 
+  static Future<Response<dynamic>> getMyStudy(int student) {
+    final $url =
+        '/course/student/$student&all=true&resolve[]=CourseOffering&resolve[]=CourseUnit&resolve[]=AcademicYear&score=true';
+    return client.get($url);
+  }
+
+  static Future<Response<dynamic>> getMyEnrollmentInfo(int student) {
+    final $url =
+        '/enrollment/current/$student&resolve[]=Programme&resolve[]=EnrollmentType';
+    return client.get($url);
+  }
+
   static Future<Response<dynamic>> getAttendanceOnCourse(
       int course, int student, int year) {
     final $url =
@@ -109,14 +121,21 @@ class ZamgerAPIService {
     return client.get($url, queryParameters: $params);
   }
 
-  static Future<Response<dynamic>> getUpcomingHomeworkDeadlines(int student) {
-    final $url = '/homework/latest/$student';
+  static Future<Response<dynamic>> getUpcomingHomeworks(int student) {
+    final $url = '/homework/latest/$student&resolve[]=CourseUnit';
     return client.get($url);
   }
 
   static Future<Response<dynamic>> getFileByHomeworkId(
       int homeworkId, int asgn, int student) {
     final $url = '/homework/$homeworkId/$asgn/student/$student/file';
+    return client.get($url);
+  }
+
+  static Future<Response<dynamic>> getHomework(
+      int homeworkId, int asgn, int courseId, int student) {
+    final $url =
+        '/homework/$homeworkId/$asgn/student/$student&resolve[]=Person&resolve[]=CourseUnit';
     return client.get($url);
   }
 
