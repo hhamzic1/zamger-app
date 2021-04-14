@@ -11,7 +11,7 @@ class HomeworkInfo {
   String name;
   CourseUnit courseUnit;
   int nrAssignments;
-  int maxScore;
+  dynamic maxScore;
   String deadline;
   bool active;
   bool automatedTesting;

@@ -15,7 +15,10 @@ Course _$CourseFromJson(Map<String, dynamic> json) {
     ..student = json['student'] == null
         ? null
         : Person.fromJson(json['student'] as Map<String, dynamic>)
-    ..score = json['score']
+    ..score = (json['score'] as List)
+        ?.map(
+            (e) => e == null ? null : Score.fromJson(e as Map<String, dynamic>))
+        ?.toList()
     ..activities = json['activities']
     ..totalScore = json['totalScore']
     ..possibleScore = json['possibleScore']

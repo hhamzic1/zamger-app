@@ -14,7 +14,7 @@ HomeworkInfo _$HomeworkInfoFromJson(Map<String, dynamic> json) {
         ? null
         : CourseUnit.fromJson(json['CourseUnit'] as Map<String, dynamic>)
     ..nrAssignments = json['nrAssignments'] as int
-    ..maxScore = json['maxScore'] as int
+    ..maxScore = json['maxScore'] as dynamic
     ..deadline = json['deadline'] as String
     ..active = json['active'] as bool
     ..automatedTesting = json['automatedTesting'] as bool

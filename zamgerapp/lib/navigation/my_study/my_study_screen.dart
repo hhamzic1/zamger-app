@@ -5,6 +5,7 @@ import 'package:zamgerapp/configuration/themeconfiguration.dart';
 import 'package:zamgerapp/models/enrollment.dart';
 import 'package:zamgerapp/models/index.dart';
 import 'package:zamgerapp/models/person.dart';
+import 'package:zamgerapp/navigation/my_study/subject_details_screen.dart';
 
 class MyStudyPage extends StatefulWidget {
   Person _currentPerson;
@@ -181,84 +182,91 @@ class _MyStudyPageState extends State<MyStudyPage> {
   }
 
   Widget buildList(BuildContext context, int index) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(25),
-        color: Colors.white,
-      ),
-      margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Column(children: [
-            Container(
-              width: 50,
-              height: 50,
-              margin: EdgeInsets.only(right: 15),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(50),
-                border: Border.all(width: 3, color: etfBlue),
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => SubjectDetailsPage(
+                _currentPerson, _filteredCourses.results[index])));
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(25),
+          color: Colors.white,
+        ),
+        margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Column(children: [
+              Container(
+                width: 50,
+                height: 50,
+                margin: EdgeInsets.only(right: 15),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+                  border: Border.all(width: 3, color: etfBlue),
+                ),
+                child: Icon(FontAwesomeIcons.book),
               ),
-              child: Icon(FontAwesomeIcons.book),
-            ),
-            _filteredCourses.results[index].grade == null
-                ? SizedBox(
-                    height: 5,
-                  )
-                : Padding(
-                    padding: EdgeInsets.fromLTRB(0, 5, 15, 0),
-                    child: Text(
-                      _filteredCourses.results[index].grade.toString(),
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: etfBlue,
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  )
-          ]),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  _filteredCourses
-                      .results[index].courseOffering.courseUnit.name,
-                  style: TextStyle(
-                      color: etfBlue,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18),
-                ),
-                SizedBox(
-                  height: 6,
-                ),
-                Row(
-                  children: <Widget>[
-                    Icon(
-                      FontAwesomeIcons.graduationCap,
-                      color: etfBlue,
-                      size: 20,
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Text(
-                        ' ' +
-                            _filteredCourses.results[index].courseOffering
-                                .academicYear.name,
+              _filteredCourses.results[index].grade == null
+                  ? SizedBox(
+                      height: 5,
+                    )
+                  : Padding(
+                      padding: EdgeInsets.fromLTRB(0, 5, 15, 0),
+                      child: Text(
+                        _filteredCourses.results[index].grade.toString(),
+                        textAlign: TextAlign.center,
                         style: TextStyle(
-                            color: etfBlue, fontSize: 13, letterSpacing: .3))
-                  ],
-                ),
-                SizedBox(
-                  height: 6,
-                ),
-                _buildGrade(_filteredCourses.results[index]),
-              ],
-            ),
-          )
-        ],
+                            color: etfBlue,
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    )
+            ]),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    _filteredCourses
+                        .results[index].courseOffering.courseUnit.name,
+                    style: TextStyle(
+                        color: etfBlue,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18),
+                  ),
+                  SizedBox(
+                    height: 6,
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Icon(
+                        FontAwesomeIcons.graduationCap,
+                        color: etfBlue,
+                        size: 20,
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Text(
+                          ' ' +
+                              _filteredCourses.results[index].courseOffering
+                                  .academicYear.name,
+                          style: TextStyle(
+                              color: etfBlue, fontSize: 13, letterSpacing: .3))
+                    ],
+                  ),
+                  SizedBox(
+                    height: 6,
+                  ),
+                  _buildGrade(_filteredCourses.results[index]),
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

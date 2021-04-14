@@ -17,7 +17,7 @@ Homework _$HomeworkFromJson(Map<String, dynamic> json) {
         ? null
         : Person.fromJson(json['student'] as Map<String, dynamic>)
     ..status = json['status'] as int
-    ..score = json['score'] as int
+    ..score = json['score'] as dynamic
     ..time = json['time'] as String
     ..comment = json['comment'] as String
     ..compileReport = json['compileReport'] as String

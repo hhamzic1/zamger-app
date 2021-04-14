@@ -106,6 +106,13 @@ class ZamgerAPIService {
     return client.get($url);
   }
 
+  static Future<Response<dynamic>> getDetailsOfCourse(
+      int courseId, int student, int year) {
+    final $url =
+        '/course/$courseId/student/$student&year=$year&score=true&resolve[]=CourseActivity&details=true&resolve[]=ZClass&resolve[]=CourseUnit&resolve[]=AcademicYear&totalScore=true&resolve[]=Homework';
+    return client.get($url);
+  }
+
   static Future<Response<dynamic>> getAttendanceOnCourse(
       int course, int student, int year) {
     final $url =

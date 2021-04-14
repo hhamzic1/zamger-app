@@ -14,7 +14,7 @@ class Homework {
   int assignNo;
   Person student;
   int status;
-  int score;
+  dynamic score;
   String time;
   String comment;
   String compileReport;
