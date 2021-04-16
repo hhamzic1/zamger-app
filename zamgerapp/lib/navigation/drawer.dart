@@ -7,6 +7,7 @@ import 'package:zamgerapp/navigation/messaging/inbox_screen.dart';
 import 'package:zamgerapp/navigation/other_screen.dart';
 
 import 'certificates/certificates_screen.dart';
+import 'exams/active_exams_screen.dart';
 import 'homeworks/homeworks_screen.dart';
 import 'login/login_screen.dart';
 import 'my_study/my_study_screen.dart';
@@ -108,6 +109,12 @@ class _DrawerScreenState extends State<DrawerScreen> {
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (context) =>
                                           MyStudyPage(_currentPerson)))
+                                }
+                              else if (element['title'] == 'Ispiti')
+                                {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) =>
+                                          ActiveExamsPage(_currentPerson)))
                                 }
                               else
                                 {

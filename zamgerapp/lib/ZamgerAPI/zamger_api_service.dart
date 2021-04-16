@@ -142,7 +142,7 @@ class ZamgerAPIService {
   static Future<Response<dynamic>> getHomework(
       int homeworkId, int asgn, int courseId, int student) {
     final $url =
-        '/homework/$homeworkId/$asgn/student/$student&resolve[]=Person&resolve[]=CourseUnit';
+        '/homework/$homeworkId/$asgn/student/$student&resolve[]=Person&resolve[]=Homework&resolve[]=CourseUnit';
     return client.get($url);
   }
 
@@ -159,13 +159,24 @@ class ZamgerAPIService {
   }
 
   static Future<Response<dynamic>> getUpcomingEvents(int student) {
-    final $url = '/event/upcoming/$student';
+    final $url = '/event/upcoming/$student&resolve[]=CourseUnit';
     return client.get($url);
   }
 
   static Future<Response<dynamic>> getRegisteredEvents(int student) {
     final $url = '/event/registered/$student';
     return client.get($url);
+  }
+
+  static Future<Response<dynamic>> registerForEvent(int eventId, int student) {
+    final $url = '/event/$eventId/register/$student';
+    return client.post($url);
+  }
+
+  static Future<Response<dynamic>> unregisterForEvent(
+      int eventId, int student) {
+    final $url = '/event/$eventId/register/$student';
+    return client.delete($url);
   }
 
   static Future<Response<dynamic>> getInfoAboutMyProgrammeAndSemester(

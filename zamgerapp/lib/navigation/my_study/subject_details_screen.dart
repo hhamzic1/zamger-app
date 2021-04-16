@@ -140,7 +140,9 @@ class _SubjectDetailsStatePage extends State<SubjectDetailsPage> {
                   ),
                 ),
                 Column(children: [
-                  _attendanceActivity == null
+                  _attendanceActivity == null ||
+                          _attendanceActivity.details == null ||
+                          _attendanceActivity.details.length == 0
                       ? Center(
                           child: Text(
                             'Nema evidentiranog prisustva',
@@ -176,10 +178,11 @@ class _SubjectDetailsStatePage extends State<SubjectDetailsPage> {
                   width: double.infinity,
                   height: 150,
                   margin: EdgeInsets.only(top: 15),
-                  child: _homeworkActivity == null
+                  child: _homeworkActivity == null ||
+                          _homeworkActivity.details.length == 0
                       ? Center(
                           child: Text(
-                            'Nema evidentiranog prisustva',
+                            'Nema ocjenjenih zadaća',
                             style: TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.w400),
                           ),

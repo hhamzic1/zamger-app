@@ -73,66 +73,72 @@ class _HomeworkInfoPageState extends State<HomeworkInfoPage> {
                           end: Alignment.bottomLeft,
                           colors: [lightBlue, etfBlue]),
                     ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: <Widget>[
-                        Row(
-                          children: <Widget>[
-                            Expanded(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Text(
-                                    _homework.homework.courseUnit.name,
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 40,
-                                      fontWeight: FontWeight.bold,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: <Widget>[
+                          Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    SizedBox(
+                                      height: 80,
                                     ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 24,
-                                      vertical: 16,
-                                    ),
-                                    child: Text(
-                                      'Naziv zadaće: ' +
-                                          _homework.homework.name,
+                                    Text(
+                                      _homework.homework.courseUnit.name,
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         color: Colors.white,
-                                        fontSize: 20,
+                                        fontSize: 40,
+                                        fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                  ),
-                                  SizedBox(
-                                    height: 12,
-                                  ),
-                                  SizedBox(
-                                    height: 20,
-                                  ),
-                                  _buildFeaturesSection(),
-                                  SizedBox(
-                                    height: 20,
-                                  ),
-                                ],
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 24,
+                                        vertical: 16,
+                                      ),
+                                      child: Text(
+                                        'Naziv zadaće: ' +
+                                            _homework.homework.name,
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 12,
+                                    ),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    _buildFeaturesSection(),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ],
-            ))
+            ),
+          )
         : Center(child: CircularProgressIndicator());
   }
 
   Widget _buildFeaturesSection() {
-    return Row(children: [
+    return Wrap(children: [
       Container(
         padding: EdgeInsets.all(24),
         decoration: BoxDecoration(
@@ -218,8 +224,7 @@ class _HomeworkInfoPageState extends State<HomeworkInfoPage> {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 4.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+              child: Wrap(
                 children: <Widget>[
                   Icon(
                     FontAwesomeIcons.comment,
