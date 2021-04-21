@@ -54,10 +54,10 @@ class _SubjectDetailsStatePage extends State<SubjectDetailsPage> {
                   gradient: LinearGradient(
                       begin: Alignment.bottomLeft,
                       end: Alignment.topRight,
-                      colors: [etfBlue, lightBlue]),
+                      colors: [lightBlue, etfBlue]),
                 ),
                 child: AppBar(
-                  backgroundColor: Color.fromRGBO(1, 1, 1, 0),
+                  backgroundColor: Color.fromRGBO(255, 255, 255, 0.0),
                   leading: GestureDetector(
                     child: Icon(Icons.arrow_back_ios),
                     onTap: () {
@@ -233,7 +233,7 @@ class _SubjectDetailsStatePage extends State<SubjectDetailsPage> {
                                   return _exams(context, element);
                                 }).toList()),
                 ),
-                SizedBox(height: 10.0),
+                SizedBox(height: 30.0),
               ],
             ),
           );
@@ -326,12 +326,12 @@ class _SubjectDetailsStatePage extends State<SubjectDetailsPage> {
                         : Image.asset('images/attendance_not_ok.png').image,
                     fit: BoxFit.scaleDown)),
             alignment: Alignment.center,
-            margin: EdgeInsets.symmetric(horizontal: 10),
-            width: 100,
-            height: 100,
+            margin: EdgeInsets.symmetric(horizontal: 15),
+            width: 60,
+            height: 60,
           ),
           SizedBox(
-            height: 10,
+            height: 15,
           ),
           Text(
             parsedDate.day.toString() +

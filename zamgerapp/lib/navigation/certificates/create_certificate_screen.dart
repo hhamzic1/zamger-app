@@ -99,12 +99,14 @@ class _CreateCertificateState extends State<CreateCertificate> {
                   width: 300,
                   padding: EdgeInsets.only(left: 16, right: 16),
                   decoration: BoxDecoration(
+                      color: Color.fromRGBO(255, 255, 255, 0.7),
                       border: Border.all(color: Colors.black, width: 1),
                       borderRadius: BorderRadius.circular(15)),
                   child: DropdownButton(
                     hint: Text(
                       'Izaberite tip',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, color: Colors.black),
                     ),
                     isExpanded: true,
                     underline: SizedBox(),
@@ -140,12 +142,14 @@ class _CreateCertificateState extends State<CreateCertificate> {
                   width: 300,
                   padding: EdgeInsets.only(left: 16, right: 16),
                   decoration: BoxDecoration(
+                      color: Color.fromRGBO(255, 255, 255, 0.7),
                       border: Border.all(color: Colors.black, width: 1),
                       borderRadius: BorderRadius.circular(15)),
                   child: DropdownButton(
                     hint: Text(
                       'Izaberite svrhu',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, color: Colors.black),
                     ),
                     isExpanded: true,
                     underline: SizedBox(),

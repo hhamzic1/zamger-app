@@ -6,6 +6,7 @@ import 'package:swipedetector/swipedetector.dart';
 import 'package:zamgerapp/ZamgerAPI/zamger_api_service.dart';
 import 'package:zamgerapp/configuration/themeconfiguration.dart';
 import 'package:zamgerapp/models/index.dart';
+import 'package:zamgerapp/widgets/widgets.dart';
 
 class MessageScreen extends StatefulWidget {
   String _message;
@@ -113,9 +114,6 @@ class _MessageState extends State<MessageScreen> {
                 ),
                 Expanded(
                   child: SwipeDetector(
-                    onSwipeLeft: () {
-                      print("left");
-                    },
                     onSwipeRight: () {
                       print("Right");
                       Navigator.pop(context);
@@ -206,7 +204,7 @@ class _MessageState extends State<MessageScreen> {
                                   _conversation[index].right.right.surname,
                               'https://library.kissclipart.com/20180906/wkw/kissclipart-user-icon-png-clipart-user-profile-computer-icons-94f08bfdb73bc68b.jpg'),
                           message(_conversation[index].left, 'recieved',
-                              _conversation[index].right.left)
+                              _conversation[index].right.left, context)
                         ],
                       );
                     } else if (index == 1) {
@@ -215,20 +213,36 @@ class _MessageState extends State<MessageScreen> {
                           receiverDetails('Ja',
                               'https://library.kissclipart.com/20180906/wkw/kissclipart-user-icon-png-clipart-user-profile-computer-icons-94f08bfdb73bc68b.jpg'),
                           message(_conversation[index].left, 'sent',
-                              _conversation[index].right.left)
+                              _conversation[index].right.left, context)
                         ],
                       );
+                    } else if (index == _conversation.length - 1) {
+                      return Column(children: [
+                        message(_conversation[index].left, 'sent',
+                            _conversation[index].right.left, context),
+                        SizedBox(
+                          height: 130,
+                        )
+                      ]);
                     } else {
                       return message(_conversation[index].left, 'sent',
-                          _conversation[index].right.left);
+                          _conversation[index].right.left, context);
                     }
                   } else if (_type == 'compose') {
                     if (index < 1) {
                       return receiverDetails('Ja',
                           'https://library.kissclipart.com/20180906/wkw/kissclipart-user-icon-png-clipart-user-profile-computer-icons-94f08bfdb73bc68b.jpg');
+                    } else if (index == _conversation.length - 1) {
+                      return Column(children: [
+                        message(_conversation[index].left, 'sent',
+                            _conversation[index].right.left, context),
+                        SizedBox(
+                          height: 130,
+                        )
+                      ]);
                     } else {
                       return message(_conversation[index].left, 'sent',
-                          _conversation[index].right.left);
+                          _conversation[index].right.left, context);
                     }
                   } else {
                     return Column(
@@ -236,7 +250,7 @@ class _MessageState extends State<MessageScreen> {
                         receiverDetails('Ja',
                             'https://library.kissclipart.com/20180906/wkw/kissclipart-user-icon-png-clipart-user-profile-computer-icons-94f08bfdb73bc68b.jpg'),
                         message(_conversation[index].left, 'sent',
-                            _conversation[index].right.left)
+                            _conversation[index].right.left, context)
                       ],
                     );
                   }
@@ -275,165 +289,5 @@ class _MessageState extends State<MessageScreen> {
           new Pair(formatter.format(DateTime.now()), null)));
       replyController.text = '';
     }
-  }
-
-  Widget senderDetails(name, imageUrl) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 5.0),
-      child: Container(
-        height: 65,
-        child: Row(
-          children: [
-            Container(
-              height: 55,
-              width: 55,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  fit: BoxFit.cover,
-                  image: NetworkImage(imageUrl),
-                ),
-                shape: BoxShape.circle,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    name,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  SizedBox(height: 4),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget receiverDetails(name, imageUrl) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 5.0),
-      child: Container(
-        height: 65,
-        child: Row(
-          children: [
-            Expanded(
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        name,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      SizedBox(height: 4),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: Container(
-                height: 55,
-                width: 55,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: NetworkImage(imageUrl),
-                  ),
-                  shape: BoxShape.circle,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget message(message, condition, time) {
-    return Align(
-      alignment:
-          condition == 'sent' ? Alignment.bottomRight : Alignment.bottomLeft,
-      child: Padding(
-        padding: EdgeInsets.only(
-          left: 10,
-          right: 10,
-          top: 4,
-          bottom: 4,
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: condition == "sent"
-              ? MainAxisAlignment.end
-              : MainAxisAlignment.start,
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Colors.white,
-                    Colors.white54,
-                  ],
-                ),
-                borderRadius: BorderRadius.circular(
-                  18,
-                ),
-              ),
-              child: Column(
-                  crossAxisAlignment: condition == 'sent'
-                      ? CrossAxisAlignment.end
-                      : CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: Align(
-                        alignment: Alignment.topLeft,
-                        child: Text(
-                          time,
-                          style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w300),
-                        ),
-                      ),
-                    ),
-                    Container(
-                        width: 200,
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(15, 0, 15, 5),
-                          child: Text(
-                            message,
-                            maxLines: null,
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        )),
-                  ]),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 }

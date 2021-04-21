@@ -128,25 +128,24 @@ class _HomeworksState extends State<HomeworksPage> {
                               fontWeight: FontWeight.bold,
                               fontSize: 25),
                         ),
-                        subtitle: Column(children: [
-                          Row(
-                            children: <Widget>[
-                              Flexible(
-                                child: Text(
-                                  "Naziv: " + _homeworks.results[index].name,
-                                  style: TextStyle(color: Colors.white),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              )
-                            ],
-                          ),
-                          Row(
+                        subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text("Rok: " + _homeworks.results[index].deadline,
-                                  style: TextStyle(color: Colors.white))
-                            ],
-                          )
-                        ]),
+                              Wrap(
+                                direction: Axis.vertical,
+                                children: <Widget>[
+                                  Text(
+                                    "Naziv: " + _homeworks.results[index].name,
+                                    style: TextStyle(color: Colors.white),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  Text(
+                                      "Rok: " +
+                                          _homeworks.results[index].deadline,
+                                      style: TextStyle(color: Colors.white))
+                                ],
+                              )
+                            ]),
                         trailing: TextButton(
                           child: Icon(Icons.arrow_forward_ios,
                               color: Colors.white, size: 30.0),

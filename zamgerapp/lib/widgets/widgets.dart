@@ -41,6 +41,8 @@ class ChatItems extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.only(bottom: 18, left: 2, right: 2),
         child: Container(
+          width: MediaQuery.of(context).size.width -
+              66, //sum of all insets is 66px
           height: 90,
           decoration: BoxDecoration(
             boxShadow: [
@@ -69,32 +71,34 @@ class ChatItems extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  Wrap(
+                    direction: Axis.horizontal,
+                    spacing: 25,
                     children: [
-                      Container(
-                        width: 120,
+                      Text(
+                        _userName,
+                        maxLines: 1,
+                        overflow: TextOverflow.fade,
+                        softWrap: false,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.centerRight,
                         child: Text(
-                          _userName,
+                          _time,
                           maxLines: 1,
                           overflow: TextOverflow.fade,
                           softWrap: false,
                           style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
+                            fontSize: 12,
+                            letterSpacing: -0.6,
+                            color: etfBlue,
                           ),
                         ),
                       ),
-                      SizedBox(width: 50),
-                      Text(
-                        _time,
-                        style: TextStyle(
-                          fontSize: 12,
-                          letterSpacing: -0.6,
-                          color: etfBlue,
-                        ),
-                      ),
-                      SizedBox(width: 5)
                     ],
                   ),
                   Row(
@@ -168,4 +172,167 @@ class CurvePainter extends CustomPainter {
   bool shouldRepaint(CustomPainter oldDelegate) {
     return true;
   }
+}
+
+Widget message(message, condition, time, context) {
+  return Align(
+    alignment:
+        condition == 'sent' ? Alignment.bottomRight : Alignment.bottomLeft,
+    child: Padding(
+      padding: EdgeInsets.only(
+        left: 10,
+        right: 10,
+        top: 4,
+        bottom: 4,
+      ),
+      child: Row(
+        mainAxisAlignment: condition == "sent"
+            ? MainAxisAlignment.end
+            : MainAxisAlignment.start,
+        children: [
+          ConstrainedBox(
+            constraints: BoxConstraints(
+                maxWidth: MediaQuery.of(context).size.width * 0.7),
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Colors.white,
+                    Colors.white54,
+                  ],
+                ),
+                borderRadius: BorderRadius.circular(
+                  18,
+                ),
+              ),
+              child: Wrap(
+                direction: Axis.vertical,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        time,
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w300),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    constraints: BoxConstraints(
+                        maxWidth: MediaQuery.of(context).size.width * 0.6),
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(15, 0, 15, 5),
+                      child: Text(
+                        message,
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+Widget senderDetails(name, imageUrl) {
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 5.0),
+    child: Container(
+      height: 65,
+      child: Row(
+        children: [
+          Container(
+            height: 55,
+            width: 55,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                fit: BoxFit.cover,
+                image: NetworkImage(imageUrl),
+              ),
+              shape: BoxShape.circle,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 8.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  name,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                SizedBox(height: 4),
+              ],
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+Widget receiverDetails(name, imageUrl) {
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 5.0),
+    child: Container(
+      height: 65,
+      child: Row(
+        children: [
+          Expanded(
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      name,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    SizedBox(height: 4),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 8.0),
+            child: Container(
+              height: 55,
+              width: 55,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  fit: BoxFit.cover,
+                  image: NetworkImage(imageUrl),
+                ),
+                shape: BoxShape.circle,
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
 }

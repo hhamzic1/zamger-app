@@ -181,72 +181,37 @@ class _ActiveExamsPageState extends State<ActiveExamsPage>
                               fontSize: 22),
                         ),
                         subtitle: Wrap(
+                          direction: Axis.vertical,
                           children: [
-                            Column(
-                              children: [
-                                Row(
-                                  children: <Widget>[
-                                    Flexible(
-                                      child: Text(
-                                        "Datum održavanja:",
-                                        style: TextStyle(color: Colors.white),
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    )
-                                  ],
-                                ),
-                                Row(
-                                  children: <Widget>[
-                                    Flexible(
-                                      child: Text(
-                                        _tempList[index].dateTime,
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold),
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    )
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      "Rok prijave:",
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      _tempList[index].deadline,
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Text("Prijavljenih:",
-                                        style: TextStyle(color: Colors.white))
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                        _tempList[index].registered.toString() +
-                                            '/' +
-                                            _tempList[index]
-                                                .maxStudents
-                                                .toString(),
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold))
-                                  ],
-                                )
-                              ],
+                            Text(
+                              "Datum održavanja:",
+                              style: TextStyle(color: Colors.white),
                             ),
+                            Text(
+                              _tempList[index].dateTime,
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              "Rok prijave:",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            Text(
+                              _tempList[index].deadline,
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Text("Prijavljenih:",
+                                style: TextStyle(color: Colors.white)),
+                            Text(
+                                _tempList[index].registered.toString() +
+                                    '/' +
+                                    _tempList[index].maxStudents.toString(),
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold))
                           ],
                         ),
                         trailing: active == true

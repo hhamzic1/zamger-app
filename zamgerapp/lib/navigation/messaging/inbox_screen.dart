@@ -27,14 +27,14 @@ class _InboxState extends State<Inbox> with SingleTickerProviderStateMixin {
   }
 
   void _fetchInbox() async {
-    var response = await ZamgerAPIService.getRecentRecievedMessages(1000);
+    var response = await ZamgerAPIService.getRecentRecievedMessages(50);
     setState(() {
       _inbox = Messages.fromJson(response.data);
     });
   }
 
   void _fetchOutbox() async {
-    var response = await ZamgerAPIService.getRecentSentMessages(1000);
+    var response = await ZamgerAPIService.getRecentSentMessages(50);
     setState(() {
       _outbox = Messages.fromJson(response.data);
     });
@@ -108,7 +108,7 @@ class _InboxState extends State<Inbox> with SingleTickerProviderStateMixin {
                           ),
                           Tab(
                             child: Text(
-                              "Unread",
+                              "Nepročitano",
                             ),
                           ),
                         ],
@@ -118,20 +118,32 @@ class _InboxState extends State<Inbox> with SingleTickerProviderStateMixin {
                 ),
                 Expanded(
                     child: TabBarView(controller: tabController, children: [
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(left: 23.0, right: 23, top: 30),
-                    child: _buildInbox(),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    child: Padding(
+                      padding:
+                          const EdgeInsets.only(left: 23.0, right: 23, top: 30),
+                      child: _buildList(
+                          'inbox', _inbox, _fetchInbox, 'Inbox je prazan'),
+                    ),
                   ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(left: 23.0, right: 23, top: 30),
-                    child: _buildOutbox(),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    child: Padding(
+                      padding:
+                          const EdgeInsets.only(left: 23.0, right: 23, top: 30),
+                      child: _buildList(
+                          'outbox', _outbox, _fetchOutbox, 'Outbox je prazan'),
+                    ),
                   ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(left: 23.0, right: 23, top: 30),
-                    child: _buildUnread(),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    child: Padding(
+                      padding:
+                          const EdgeInsets.only(left: 23.0, right: 23, top: 30),
+                      child: _buildList('unread', _unread, _fetchUnread,
+                          'Nemate nepročitanih poruka'),
+                    ),
                   ),
                 ]))
               ],
@@ -142,93 +154,86 @@ class _InboxState extends State<Inbox> with SingleTickerProviderStateMixin {
     );
   }
 
-  Widget _buildInbox() {
-    return _inbox != null
+  Widget _buildList(String type, list, onStateFun, onEmptyMessage) {
+    Widget tempWidget = _checkList(list, onEmptyMessage, onStateFun);
+    if (tempWidget != null) {
+      return tempWidget;
+    }
+    return list != null
         ? RefreshIndicator(
             child: ListView.builder(
                 padding: EdgeInsets.all(8),
-                itemCount: _inbox.results.length,
+                itemCount: list.results.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return Row(
-                    children: <Widget>[
-                      SizedBox(height: 10),
-                      ChatItems(
-                          _inbox.results[index].id,
-                          _inbox.results[index].sender.login,
-                          _inbox.results[index].text,
-                          _inbox.results[index].time,
-                          _inbox.results[index].sender,
-                          _inbox.results[index].receiver,
-                          "inbox")
-                    ],
-                  );
+                  if (type == 'unread') {
+                    return Row(
+                      children: <Widget>[
+                        SizedBox(height: 10),
+                        ChatItems(
+                            list.results[index].id,
+                            list.results[index].sender.login,
+                            list.results[index].text,
+                            list.results[index].time,
+                            list.results[index].sender,
+                            list.results[index].receiver,
+                            "unread"),
+                      ],
+                    );
+                  } else if (type == 'inbox') {
+                    return Row(
+                      children: <Widget>[
+                        SizedBox(height: 10),
+                        ChatItems(
+                            list.results[index].id,
+                            list.results[index].sender.login,
+                            list.results[index].text,
+                            list.results[index].time,
+                            list.results[index].sender,
+                            list.results[index].receiver,
+                            "inbox"),
+                      ],
+                    );
+                  } else {
+                    return Row(
+                      children: <Widget>[
+                        SizedBox(height: 10),
+                        ChatItems(
+                            list.results[index].id,
+                            list.results[index].receiverPerson.login,
+                            list.results[index].text,
+                            list.results[index].time,
+                            list.results[index].receiverPerson,
+                            list.results[index].sender.id,
+                            "outbox"),
+                      ],
+                    );
+                  }
                 }),
             onRefresh: () async {
               setState(() {
-                _fetchInbox();
+                onStateFun();
               });
             },
           )
         : Center(child: CircularProgressIndicator());
   }
 
-  Widget _buildOutbox() {
-    return _outbox != null
-        ? RefreshIndicator(
-            child: ListView.builder(
-                padding: EdgeInsets.all(8),
-                itemCount: _outbox.results.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Row(
-                    children: <Widget>[
-                      SizedBox(height: 10),
-                      ChatItems(
-                          _outbox.results[index].id,
-                          _outbox.results[index].receiverPerson.login,
-                          _outbox.results[index].text,
-                          _outbox.results[index].time,
-                          _outbox.results[index].receiverPerson,
-                          _outbox.results[index].sender.id,
-                          "outbox"),
-                    ],
-                  );
-                }),
-            onRefresh: () async {
-              setState(() {
-                _fetchOutbox();
-              });
-            },
-          )
-        : Center(child: CircularProgressIndicator());
-  }
-
-  Widget _buildUnread() {
-    return _unread != null
-        ? RefreshIndicator(
-            child: ListView.builder(
-                padding: EdgeInsets.all(8),
-                itemCount: _unread.results.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Row(
-                    children: <Widget>[
-                      SizedBox(height: 10),
-                      ChatItems(
-                          _unread.results[index].id,
-                          _unread.results[index].sender.login,
-                          _unread.results[index].text,
-                          _unread.results[index].time,
-                          _unread.results[index].sender,
-                          _unread.results[index].receiver,
-                          "unread"),
-                    ],
-                  );
-                }),
-            onRefresh: () async {
-              setState(() {
-                _fetchUnread();
-              });
-            },
-          )
-        : Center(child: CircularProgressIndicator());
+  Widget _checkList(list, message, Function onStateFun) {
+    if (list != null && list.results.length == 0) {
+      return RefreshIndicator(
+        child: Center(
+            child: Text(
+          message,
+          style: TextStyle(
+              color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20),
+        )),
+        onRefresh: () async {
+          setState(() {
+            onStateFun();
+          });
+        },
+      );
+    }
+    return null;
   }
 }

@@ -92,8 +92,6 @@ class _CertificatesState extends State<CertificatesPage> {
     });
   }
 
-  //status 1 zahtjeva znaci da nije obrađen
-
   Widget _buildCertsList() {
     return _certs != null
         ? RefreshIndicator(
@@ -127,12 +125,12 @@ class _CertificatesState extends State<CertificatesPage> {
                           child: _certs.results[index].status == 1
                               ? Icon(
                                   Icons.timer,
-                                  color: Colors.yellow,
+                                  color: Colors.white,
                                   size: 30,
                                 )
                               : Icon(
                                   Icons.check,
-                                  color: Colors.green,
+                                  color: Colors.white,
                                   size: 30,
                                 ),
                         ),
@@ -143,37 +141,27 @@ class _CertificatesState extends State<CertificatesPage> {
                           style: TextStyle(
                               color: Colors.white, fontWeight: FontWeight.bold),
                         ),
-                        subtitle: Column(children: [
-                          Row(
-                            children: <Widget>[
-                              Icon(Icons.linear_scale,
-                                  color: _certs.results[index].status == 1
-                                      ? Colors.yellowAccent
-                                      : Colors.green),
-                              Flexible(
-                                child: Text(
-                                  " U svrhu: " + purpose,
-                                  style: TextStyle(color: Colors.white),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              )
-                            ],
-                          ),
-                          Row(
+                        subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              Text(
+                                " U svrhu: " + purpose,
+                                style: TextStyle(color: Colors.white),
+                              ),
                               Text(_certs.results[index].datetime,
                                   style: TextStyle(color: Colors.white))
-                            ],
-                          )
-                        ]),
+                            ]),
                         trailing: _certs.results[index].status == 2
                             ? null
                             : TextButton(
                                 child: Icon(Icons.cancel,
-                                    color: Colors.red, size: 30.0),
+                                    color: Colors.white, size: 30.0),
                                 onPressed: () async {
-                                  await _cancelCertificate(
-                                      _certs.results[index].id);
+                                  _showAlertDialog(
+                                      context, _certs.results[index].id);
+                                  setState(() {
+                                    _fetchCertificates();
+                                  });
                                 },
                               ),
                       ),
@@ -192,5 +180,34 @@ class _CertificatesState extends State<CertificatesPage> {
   Future<void> _cancelCertificate(int id) async {
     await ZamgerAPIService.cancelCertificateById(id);
     _fetchCertificates();
+  }
+
+  _showAlertDialog(BuildContext context, certId) {
+    AlertDialog alert = AlertDialog(
+      title: Text('Upozorenje'), // To display the title it is optional
+      content: Text('Da li ste sigurni da želite otkazati zahtjev?'),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: Text('NE'),
+        ),
+        TextButton(
+          onPressed: () async {
+            await _cancelCertificate(certId);
+            Navigator.of(context).pop();
+          },
+          child: Text('DA'),
+        ),
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 }
