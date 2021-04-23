@@ -4,8 +4,6 @@ import 'package:zamgerapp/ZamgerAPI/zamger_api_service.dart';
 import 'package:zamgerapp/configuration/themeconfiguration.dart';
 import 'package:zamgerapp/models/index.dart';
 import 'package:zamgerapp/navigation/messaging/inbox_screen.dart';
-import 'package:zamgerapp/navigation/other_screen.dart';
-
 import 'certificates/certificates_screen.dart';
 import 'exams/active_exams_screen.dart';
 import 'homeworks/homeworks_screen.dart';
@@ -46,8 +44,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
             Row(
               children: [
                 CircleAvatar(
-                  backgroundImage: NetworkImage(
-                      'https://library.kissclipart.com/20180906/wkw/kissclipart-user-icon-png-clipart-user-profile-computer-icons-94f08bfdb73bc68b.jpg'),
+                  backgroundImage: Image.asset('images/user_icon.png').image,
                   backgroundColor: Colors.transparent,
                   radius: 20,
                 ),
@@ -68,7 +65,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                 )
               ],
             ),
-            SizedBox(height: 60),
+            SizedBox(height: 80),
             Column(
               children: drawerItems
                   .map((element) => Padding(
@@ -118,20 +115,13 @@ class _DrawerScreenState extends State<DrawerScreen> {
                                             builder: (context) =>
                                                 MyStudyPage(_currentPerson)))
                                   }
-                                else if (element['title'] == 'Ispiti')
+                                else
                                   {
                                     Navigator.of(context).push(
                                         MaterialPageRoute(
                                             builder: (context) =>
                                                 ActiveExamsPage(
                                                     _currentPerson)))
-                                  }
-                                else
-                                  {
-                                    Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                OtherScreen()))
                                   }
                               },
                             ),
@@ -141,7 +131,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                   .toList(),
             ),
             SizedBox(
-              height: 30,
+              height: 50,
             ),
             Row(
               children: [
@@ -171,9 +161,8 @@ class _DrawerScreenState extends State<DrawerScreen> {
                 TextButton(
                   onPressed: () async {
                     await Credentials.deleteTokens();
-                    Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(builder: (context) => LoginPage()),
-                        (Route<dynamic> route) => false);
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                        '/login', (Route<dynamic> route) => false);
                   },
                   child: Text(
                     'Odjavi se',
@@ -191,10 +180,12 @@ class _DrawerScreenState extends State<DrawerScreen> {
 
   _fetchUserNameSurname() async {
     var response = await ZamgerAPIService.currentPerson();
-    Person person = Person.fromJson(response.data);
-    setState(() {
-      _currentPerson = person;
-      _nameSurname = person.name + " " + person.surname;
-    });
+    if (response.statusCode == 200) {
+      Person person = Person.fromJson(response.data);
+      setState(() {
+        _currentPerson = person;
+        _nameSurname = person.name + " " + person.surname;
+      });
+    }
   }
 }

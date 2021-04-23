@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.zamgerapp">
    <application
-        android:label="zamgerapp"
+        android:label="Zamger"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

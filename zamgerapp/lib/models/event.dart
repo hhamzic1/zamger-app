@@ -1,5 +1,4 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:zamgerapp/models/programme.dart';
 
 import 'courseActivity.dart';
 import 'courseUnit.dart';

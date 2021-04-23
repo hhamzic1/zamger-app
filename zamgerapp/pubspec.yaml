@@ -35,6 +35,7 @@ dependencies:
   dio:
   swipedetector:
   intl:
+  simple_animations: ^2.2.1
   fl_animated_linechart: ^1.1.4
   animated_splash_screen: ^1.1.0
 dependency_overrides:

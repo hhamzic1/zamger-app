@@ -63,10 +63,9 @@ class ZamgerAPIService {
     return client.get($url);
   }
 
-  static Future<Response<dynamic>> getInboxAnnouncements(int limit) {
-    final $url = '/inbox/announcements';
-    final $params = <String, dynamic>{'messages': limit};
-    return client.get($url, queryParameters: $params);
+  static Future<Response<dynamic>> getInboxAnnouncements() {
+    final $url = '/inbox/announcements&resolve[]=Person';
+    return client.get($url);
   }
 
   static Future<Response<dynamic>> sendMessage(Message message) {
@@ -121,11 +120,10 @@ class ZamgerAPIService {
     return client.get($url, queryParameters: $params);
   }
 
-  static Future<Response<dynamic>> getLatestExamResults(
-      int student, int limit) {
-    final $url = '/exam/latest/$student';
-    final $params = <String, dynamic>{'limit': limit};
-    return client.get($url, queryParameters: $params);
+  static Future<Response<dynamic>> getLatestExamResults(int student) {
+    final $url =
+        '/exam/latest/$student&resolve[]=CourseActivity&resolve[]=CourseUnit';
+    return client.get($url);
   }
 
   static Future<Response<dynamic>> getUpcomingHomeworks(int student) {

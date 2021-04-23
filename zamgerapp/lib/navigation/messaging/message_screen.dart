@@ -198,11 +198,9 @@ class _MessageState extends State<MessageScreen> {
                     if (index < 1) {
                       return Column(
                         children: [
-                          senderDetails(
-                              _conversation[index].right.right.name +
-                                  " " +
-                                  _conversation[index].right.right.surname,
-                              'https://library.kissclipart.com/20180906/wkw/kissclipart-user-icon-png-clipart-user-profile-computer-icons-94f08bfdb73bc68b.jpg'),
+                          senderDetails(_conversation[index].right.right.name +
+                              " " +
+                              _conversation[index].right.right.surname),
                           message(_conversation[index].left, 'recieved',
                               _conversation[index].right.left, context)
                         ],
@@ -210,8 +208,7 @@ class _MessageState extends State<MessageScreen> {
                     } else if (index == 1) {
                       return Column(
                         children: [
-                          receiverDetails('Ja',
-                              'https://library.kissclipart.com/20180906/wkw/kissclipart-user-icon-png-clipart-user-profile-computer-icons-94f08bfdb73bc68b.jpg'),
+                          receiverDetails('Ja'),
                           message(_conversation[index].left, 'sent',
                               _conversation[index].right.left, context)
                         ],
@@ -230,8 +227,7 @@ class _MessageState extends State<MessageScreen> {
                     }
                   } else if (_type == 'compose') {
                     if (index < 1) {
-                      return receiverDetails('Ja',
-                          'https://library.kissclipart.com/20180906/wkw/kissclipart-user-icon-png-clipart-user-profile-computer-icons-94f08bfdb73bc68b.jpg');
+                      return receiverDetails('Ja');
                     } else if (index == _conversation.length - 1) {
                       return Column(children: [
                         message(_conversation[index].left, 'sent',
@@ -247,8 +243,7 @@ class _MessageState extends State<MessageScreen> {
                   } else {
                     return Column(
                       children: [
-                        receiverDetails('Ja',
-                            'https://library.kissclipart.com/20180906/wkw/kissclipart-user-icon-png-clipart-user-profile-computer-icons-94f08bfdb73bc68b.jpg'),
+                        receiverDetails('Ja'),
                         message(_conversation[index].left, 'sent',
                             _conversation[index].right.left, context)
                       ],

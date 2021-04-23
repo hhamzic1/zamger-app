@@ -226,7 +226,7 @@ class _ActiveExamsPageState extends State<ActiveExamsPage>
                                 child: Icon(FontAwesomeIcons.timesCircle,
                                     color: Colors.white, size: 30.0),
                                 onPressed: () async {
-                                  await _unregisterFromExam(_tempList[index]);
+                                  _showAlertDialog(context, _tempList[index]);
                                 },
                               ),
                       ),
@@ -240,6 +240,35 @@ class _ActiveExamsPageState extends State<ActiveExamsPage>
             },
           )
         : Center(child: CircularProgressIndicator());
+  }
+
+  _showAlertDialog(BuildContext context, Event event) {
+    AlertDialog alert = AlertDialog(
+      title: Text('Upozorenje'),
+      content: Text('Da li ste sigurni da se želite odjaviti sa ovog ispita?'),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: Text('NE'),
+        ),
+        TextButton(
+          onPressed: () async {
+            await _unregisterFromExam(event);
+            Navigator.of(context).pop();
+          },
+          child: Text('DA'),
+        ),
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 
   Future<void> _fetchMyExams() async {

@@ -87,7 +87,7 @@ class ButtonLoginState extends State<ButtonLogin> {
       ZamgerAPIService();
       usernameController.text = '';
       passwordController.text = '';
-      Navigator.push(
+      Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => HomePage()),
       );

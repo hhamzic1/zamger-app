@@ -1,11 +1,204 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:zamgerapp/ZamgerAPI/secure_storage.dart';
 import 'package:zamgerapp/ZamgerAPI/zamger_api_service.dart';
 import 'package:zamgerapp/configuration/themeconfiguration.dart';
+import 'package:zamgerapp/models/announcement.dart';
+import 'package:zamgerapp/models/examLatest.dart';
 import 'package:zamgerapp/models/person.dart';
 import 'package:zamgerapp/navigation/login/login_screen.dart';
 import 'package:zamgerapp/navigation/messaging/message_screen.dart';
 import 'package:http/http.dart' as http;
+import 'package:simple_animations/simple_animations.dart';
+
+class FadeAnimation extends StatelessWidget {
+  final double delay;
+  final Widget child;
+
+  FadeAnimation(this.delay, this.child);
+
+  @override
+  Widget build(BuildContext context) {
+    final tween = MultiTrackTween([
+      Track('opacity')
+          .add(Duration(milliseconds: 500), Tween(begin: 0.0, end: 1.0)),
+      Track('translateX').add(
+          Duration(milliseconds: 500), Tween(begin: 120.0, end: 0.0),
+          curve: Curves.easeOut)
+    ]);
+    return ControlledAnimation(
+      delay: Duration(milliseconds: (500 * delay).round()),
+      duration: tween.duration,
+      tween: tween,
+      child: child,
+      builderWithChild: (context, child, animation) => Opacity(
+        opacity: animation['opacity'],
+        child: Transform.translate(
+          offset: Offset(animation['translateX'], 0),
+          child: child,
+        ),
+      ),
+    );
+  }
+}
+
+Widget examItem(ExamLatest latestExam) {
+  return AspectRatio(
+    aspectRatio: 1 / 1.5,
+    child: GestureDetector(
+      child: Container(
+        margin: EdgeInsets.only(right: 20),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            image: DecorationImage(
+              image: Image.asset('images/exam.jpg').image,
+              fit: BoxFit.cover,
+            )),
+        child: Container(
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              gradient: LinearGradient(begin: Alignment.bottomCenter, stops: [
+                .2,
+                .9
+              ], colors: [
+                Colors.black.withOpacity(.9),
+                Colors.black.withOpacity(.3),
+              ])),
+          child: Padding(
+            padding: EdgeInsets.all(20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Align(
+                  alignment: Alignment.topRight,
+                  child: Icon(
+                    FontAwesomeIcons.pen,
+                    color: Colors.white,
+                  ),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      latestExam.result.toString() +
+                          '/' +
+                          latestExam.exam.courseActivity.points.toString(),
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      latestExam.exam.courseUnit.abbrev,
+                      style: TextStyle(color: Colors.white, fontSize: 20),
+                    )
+                  ],
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+Widget announcement(BuildContext context, Announcement announcement) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+    child: MaterialButton(
+      padding: const EdgeInsets.all(0),
+      elevation: 0.5,
+      color: Colors.white,
+      clipBehavior: Clip.antiAlias,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      onPressed: () {},
+      onLongPress: () {
+        _showAnnouncementDetails(context, announcement);
+      },
+      child: Row(
+        children: <Widget>[
+          Ink(
+            height: 100,
+            width: 100,
+            child: Center(
+              child: Icon(
+                FontAwesomeIcons.bullhorn,
+                size: 40,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Text(
+                            announcement.sender.email,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 15),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          announcement.text == ""
+                              ? Text(announcement.subject,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 10))
+                              : Text(announcement.text,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 10))
+                        ],
+                      ),
+                    ),
+                  ],
+                )),
+          )
+        ],
+      ),
+    ),
+  );
+}
+
+_showAnnouncementDetails(BuildContext context, Announcement announcement) {
+  AlertDialog alert = AlertDialog(
+    title: Text('Obavještenje'),
+    content: SingleChildScrollView(
+      child: announcement.text == ""
+          ? Text(announcement.subject)
+          : Text(announcement.text),
+    ),
+    actions: [
+      TextButton(
+        onPressed: () async {
+          Navigator.of(context).pop();
+        },
+        child: Text('OK'),
+      ),
+    ],
+  );
+
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
+}
 
 class ChatItems extends StatelessWidget {
   String _userName;
@@ -61,8 +254,7 @@ class ChatItems extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: CircleAvatar(
-                  backgroundImage: NetworkImage(
-                      'https://library.kissclipart.com/20180906/wkw/kissclipart-user-icon-png-clipart-user-profile-computer-icons-94f08bfdb73bc68b.jpg'),
+                  backgroundImage: Image.asset('images/user_icon.png').image,
                   backgroundColor: Colors.transparent,
                   radius: 25,
                 ),
@@ -128,11 +320,9 @@ class ChatItems extends StatelessWidget {
 }
 
 Future<Widget> checkAPPCredentials() async {
-  await Credentials.deleteTokens();
   String accessToken = await Credentials.getAccessToken();
   String refreshToken = await Credentials.getRefreshToken();
   if (accessToken == null || refreshToken == null) {
-    print("Ovdje je ušlo");
     return LoginPage();
   } else {
     var headers = {'Authorization': 'Bearer ' + accessToken};
@@ -144,7 +334,6 @@ Future<Widget> checkAPPCredentials() async {
       ZamgerAPIService();
       return HomePage();
     } else {
-      print("dole je ušlo");
       return LoginPage();
     }
   }
@@ -247,7 +436,7 @@ Widget message(message, condition, time, context) {
   );
 }
 
-Widget senderDetails(name, imageUrl) {
+Widget senderDetails(name) {
   return Padding(
     padding: const EdgeInsets.only(bottom: 5.0),
     child: Container(
@@ -260,7 +449,7 @@ Widget senderDetails(name, imageUrl) {
             decoration: BoxDecoration(
               image: DecorationImage(
                 fit: BoxFit.cover,
-                image: NetworkImage(imageUrl),
+                image: Image.asset('images/user_icon.png').image,
               ),
               shape: BoxShape.circle,
             ),
@@ -288,7 +477,7 @@ Widget senderDetails(name, imageUrl) {
   );
 }
 
-Widget receiverDetails(name, imageUrl) {
+Widget receiverDetails(name) {
   return Padding(
     padding: const EdgeInsets.only(bottom: 5.0),
     child: Container(
@@ -325,7 +514,7 @@ Widget receiverDetails(name, imageUrl) {
               decoration: BoxDecoration(
                 image: DecorationImage(
                   fit: BoxFit.cover,
-                  image: NetworkImage(imageUrl),
+                  image: Image.asset('images/user_icon.png').image,
                 ),
                 shape: BoxShape.circle,
               ),
