@@ -93,7 +93,9 @@ class _CertificatesState extends State<CertificatesPage> {
   }
 
   Widget _buildCertsList() {
-    return _certs != null
+    return _certs != null &&
+            _certs.results != null &&
+            _certs.results.length != 0
         ? RefreshIndicator(
             child: ListView.builder(
                 padding: EdgeInsets.fromLTRB(8, 0, 8, 8),
@@ -148,7 +150,7 @@ class _CertificatesState extends State<CertificatesPage> {
                                 " U svrhu: " + purpose,
                                 style: TextStyle(color: Colors.white),
                               ),
-                              Text(_certs.results[index].datetime,
+                              Text(_certs.results[index].requestedDate,
                                   style: TextStyle(color: Colors.white))
                             ]),
                         trailing: _certs.results[index].status == 2
@@ -174,7 +176,15 @@ class _CertificatesState extends State<CertificatesPage> {
               });
             },
           )
-        : Center(child: CircularProgressIndicator());
+        : Center(
+            child: Text(
+              'Nemate poslanih zahtjeva',
+              style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20),
+            ),
+          );
   }
 
   Future<void> _cancelCertificate(int id) async {

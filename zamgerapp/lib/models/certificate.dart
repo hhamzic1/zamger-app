@@ -12,7 +12,8 @@ class Certificate {
   Person student;
   int certificateType;
   int certificatePurpose;
-  dynamic datetime;
+  dynamic requestedDate;
+  dynamic processedDate;
   dynamic status;
   dynamic free;
 

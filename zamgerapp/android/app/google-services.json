@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "243272161563",
+    "project_id": "zamger-mobile",
+    "storage_bucket": "zamger-mobile.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:243272161563:android:59987713a6d508c44a1bbe",
+        "android_client_info": {
+          "package_name": "ba.unsa.etf.zamgerapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "243272161563-7r04vnjr7knajbgoe5oq8c9me250jnjv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDAoIAvGbo0aOHtYZMZLLrcRLMM9CicwsM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "243272161563-7r04vnjr7knajbgoe5oq8c9me250jnjv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

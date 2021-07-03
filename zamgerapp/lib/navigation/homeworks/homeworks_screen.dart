@@ -32,44 +32,47 @@ class _HomeworksState extends State<HomeworksPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Stack(
-          children: [
-            CustomPaint(
-              painter: CurvePainter(),
-              child: Container(
-                height: 300.0,
-              ),
-            ),
-            Column(
-              children: [
-                Container(
-                  height: 100,
-                  width: MediaQuery.of(context).size.width,
-                  child: PreferredSize(
-                    preferredSize: Size.fromHeight(100),
-                    child: AppBar(
-                      backgroundColor: etfBlue,
-                      title: Text("Aktivne zadaće"),
-                      centerTitle: true,
-                      elevation: 0,
-                      leading: TextButton(
-                        child: Icon(Icons.arrow_back_ios, color: Colors.white),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
+    return _homeworks != null
+        ? Scaffold(
+            body: SafeArea(
+              child: Stack(
+                children: [
+                  CustomPaint(
+                    painter: CurvePainter(),
+                    child: Container(
+                      height: 300.0,
                     ),
                   ),
-                ),
-                Expanded(child: _buildActiveHomeworks()),
-              ],
+                  Column(
+                    children: [
+                      Container(
+                        height: 100,
+                        width: MediaQuery.of(context).size.width,
+                        child: PreferredSize(
+                          preferredSize: Size.fromHeight(100),
+                          child: AppBar(
+                            backgroundColor: etfBlue,
+                            title: Text("Aktivne zadaće"),
+                            centerTitle: true,
+                            elevation: 0,
+                            leading: TextButton(
+                              child: Icon(Icons.arrow_back_ios,
+                                  color: Colors.white),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(child: _buildActiveHomeworks()),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ],
-        ),
-      ),
-    );
+          )
+        : Center(child: CircularProgressIndicator());
   }
 
   Future<void> _fetchActiveHomeworks() async {
@@ -83,7 +86,9 @@ class _HomeworksState extends State<HomeworksPage> {
   }
 
   Widget _buildActiveHomeworks() {
-    return _homeworks != null
+    return _homeworks != null &&
+            _homeworks.results != null &&
+            _homeworks.results.length != 0
         ? RefreshIndicator(
             child: ListView.builder(
                 padding: EdgeInsets.fromLTRB(8, 0, 8, 8),
@@ -167,6 +172,14 @@ class _HomeworksState extends State<HomeworksPage> {
               });
             },
           )
-        : Center(child: CircularProgressIndicator());
+        : Center(
+            child: Text(
+              'Nemate aktivnih zadaća',
+              style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20),
+            ),
+          );
   }
 }

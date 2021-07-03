@@ -334,7 +334,22 @@ Future<Widget> checkAPPCredentials() async {
       ZamgerAPIService();
       return HomePage();
     } else {
-      return LoginPage();
+      if (await Credentials.refreshTokens()) {
+        accessToken = await Credentials.getAccessToken();
+        var headers = {'Authorization': 'Bearer ' + accessToken};
+        var request = http.Request(
+            'GET', Uri.parse('https://zamger.etf.unsa.ba/api_v6/person'));
+        request.headers.addAll(headers);
+        http.StreamedResponse response = await request.send();
+        if (response.statusCode == 200) {
+          ZamgerAPIService();
+          return HomePage();
+        } else {
+          return LoginPage();
+        }
+      } else {
+        return LoginPage();
+      }
     }
   }
 }

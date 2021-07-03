@@ -14,7 +14,8 @@ Certificate _$CertificateFromJson(Map<String, dynamic> json) {
     ..id = json['id']
     ..certificateType = json['CertificateType']
     ..certificatePurpose = json['CertificatePurpose']
-    ..datetime = json['datetime']
+    ..requestedDate = json['requestedDate']
+    ..processedDate = json['processedDate']
     ..status = json['status']
     ..free = json['free'];
 }
@@ -25,7 +26,8 @@ Map<String, dynamic> _$CertificateToJson(Certificate instance) =>
       'student': instance.student,
       'CertificateType': instance.certificateType,
       'CertificatePurpose': instance.certificatePurpose,
-      'datetime': instance.datetime,
+      'requestedDate': instance.requestedDate,
+      'processedDate': instance.processedDate,
       'status': instance.status,
       'free': instance.free
     };

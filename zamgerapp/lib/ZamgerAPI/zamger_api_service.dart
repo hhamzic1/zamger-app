@@ -1,8 +1,10 @@
 import 'package:dio/dio.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:zamgerapp/ZamgerAPI/secure_storage.dart';
 import 'package:zamgerapp/main.dart';
 import 'package:zamgerapp/models/certificate.dart';
+import 'package:zamgerapp/models/firebaseToken.dart';
 import 'package:zamgerapp/models/index.dart';
 
 class ZamgerAPIService {
@@ -183,6 +185,29 @@ class ZamgerAPIService {
     return client.get($url);
   }
 
+  static Future<Response<dynamic>> sendFirebaseDeviceToken(
+      FirebaseToken token) {
+    final $url = '/zamger/firebase_token';
+    return client.post($url, data: token.toJson());
+  }
+
+  static Future<Response<dynamic>> getFirebaseDeviceToken(int student) {
+    final $url = '/zamger/firebase_token?person=$student';
+    return client.get($url);
+  }
+
+  static Future<Response<dynamic>> updateFirebaseDeviceToken(
+      FirebaseToken token) {
+    final $url = '/zamger/firebase_token';
+    return client.put($url, data: token.toJson());
+  }
+
+  static Future<Response<dynamic>> deleteFirebaseDeviceToken(
+      FirebaseToken token) {
+    final $url = '/zamger/firebase_token';
+    return client.delete($url, data: token.toJson());
+  }
+
   static Future<Response<dynamic>> getInfoAboutAllSemestersOfStudent(
       int student) {
     final $url = '/enrollment/all/$student';
@@ -251,7 +276,6 @@ class ZamgerAuthInterceptor extends Interceptor {
 
   Future<Response> _retryWithToken(RequestOptions originalRequest) async {
     originalRequest.headers[AUTH] = BEARER + await Credentials.getAccessToken();
-    print("TOKEN JE REFRESHOVAN");
     return ZamgerAPIService.client
         .request(originalRequest.path, options: originalRequest);
   }

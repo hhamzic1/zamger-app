@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:zamgerapp/FCM/helpers.dart';
 import 'package:zamgerapp/ZamgerAPI/secure_storage.dart';
 import 'package:zamgerapp/ZamgerAPI/zamger_api_service.dart';
 import 'package:zamgerapp/configuration/themeconfiguration.dart';
+import 'package:zamgerapp/models/firebaseToken.dart';
 import 'package:zamgerapp/models/index.dart';
 import 'package:zamgerapp/navigation/messaging/inbox_screen.dart';
 import 'certificates/certificates_screen.dart';
@@ -135,31 +137,12 @@ class _DrawerScreenState extends State<DrawerScreen> {
             ),
             Row(
               children: [
-                Icon(
-                  Icons.settings,
-                  color: Colors.white,
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Text(
-                  'Postavke',
-                  style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Container(
-                  width: 2,
-                  height: 20,
-                  color: Colors.white,
-                ),
                 SizedBox(
                   width: 10,
                 ),
                 TextButton(
                   onPressed: () async {
+                    await _deleteFCMTokenForCurrentUser();
                     await Credentials.deleteTokens();
                     Navigator.of(context).pushNamedAndRemoveUntil(
                         '/login', (Route<dynamic> route) => false);
@@ -167,7 +150,9 @@ class _DrawerScreenState extends State<DrawerScreen> {
                   child: Text(
                     'Odjavi se',
                     style: TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold),
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16),
                   ),
                 )
               ],
@@ -186,6 +171,20 @@ class _DrawerScreenState extends State<DrawerScreen> {
         _currentPerson = person;
         _nameSurname = person.name + " " + person.surname;
       });
+    }
+  }
+
+  _deleteFCMTokenForCurrentUser() async {
+    var person = new Person();
+    person.id = _currentPerson.id;
+    FirebaseToken token = new FirebaseToken();
+    token.person = person;
+    token.deviceToken = await FCMHelpers.getToken();
+    var response = await ZamgerAPIService.deleteFirebaseDeviceToken(token);
+    if (response.statusCode == 204) {
+      print("fcm token se desyncao sa zamgerom!");
+    } else {
+      print("fcm token se nije desyncao sa zamgerom!");
     }
   }
 }

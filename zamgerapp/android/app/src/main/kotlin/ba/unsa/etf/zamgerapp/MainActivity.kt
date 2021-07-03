@@ -1,4 +1,4 @@
-package com.example.zamgerapp
+package ba.unsa.etf.zamgerapp
 
 import io.flutter.embedding.android.FlutterActivity
 
