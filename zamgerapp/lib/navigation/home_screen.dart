@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:zamgerapp/FCM/helpers.dart';
 import 'package:zamgerapp/ZamgerAPI/zamger_api_service.dart';
 import 'package:zamgerapp/models/announcements.dart';
 import 'package:zamgerapp/models/examLatest.dart';
+import 'package:zamgerapp/models/firebaseToken.dart';
 import 'package:zamgerapp/models/person.dart';
 import 'package:zamgerapp/widgets/widgets.dart';
 
@@ -172,6 +174,7 @@ class _HomeScreenState extends State<HomeScreen> {
     var response = await ZamgerAPIService.currentPerson();
     if (response.statusCode == 200) {
       _currentPerson = Person.fromJson(response.data);
+      await _updateFirebaseToken();
       await _fetchRecentExamResults(_currentPerson.id);
       await _fetchRecentAnnouncements();
       setState(() {});
@@ -192,6 +195,22 @@ class _HomeScreenState extends State<HomeScreen> {
     var response = await ZamgerAPIService.getInboxAnnouncements();
     if (response.statusCode == 200) {
       _recentAnnouncements = Announcements.fromJson(response.data);
+    }
+  }
+
+  Future<void> _updateFirebaseToken() async {
+    var person = new Person();
+    person.id = _currentPerson.id;
+    print(person.toJson());
+    FirebaseToken token = new FirebaseToken();
+    token.person = person;
+    token.deviceToken = await FCMHelpers.getToken();
+    print(token.toJson());
+    var response = await ZamgerAPIService.updateFirebaseDeviceToken(token);
+    if (response.statusCode == 201) {
+      print("fcm token se syncao sa zamgerom!");
+    } else {
+      print("fcm token se nije syncao sa zamgerom!");
     }
   }
 }
